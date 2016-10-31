@@ -1,0 +1,30 @@
+#! /usr/bin/env node
+
+const path= require('path');
+require('babel-register')(
+	{
+		presets: [ 'es2015', 'react' ],
+		plugins: [ 'transform-object-rest-spread' ]
+	}
+);
+
+const { NodeServer }= require('./app.jsx');
+
+const fileName= process.argv[2];
+
+let App;
+
+try {
+	App= require(path.resolve(fileName)).default;
+} catch(e) {
+	console.log("Module not found ", e);
+	process.exit(1);
+}
+
+const Server= App.NodeServer || NodeServer;
+
+const server= new Server(App);
+
+server.createServer();
+server.start();
+
