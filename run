@@ -12,8 +12,6 @@ const fileName= process.argv[2];
 
 let App;
 
-console.log(path.resolve(fileName));
-
 try {
 	App= require(path.resolve(fileName)).default;
 

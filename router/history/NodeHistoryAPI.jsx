@@ -19,12 +19,16 @@ export class NodeHistoryAPI extends _HnRouteHistoryAPI {
 		routerConfig.type= 'node';
 	}
 
+
+	// Finds the best match for the current request from the routes
 	matchRoute(routes) {
 
 		this._currentUrl= this._req.url;
 
-		const route= this._findMatchRoute(routes, this._currentUrl);
+		// Find the best match
+		const route= this._findMatchRoute(routes, this._currentUrl, this._req.method);
 
+		// Set the response status code
 		this.response.statusCode= (route.errorHandler)? 404: (route.statusCode || 200);
 
 		return {

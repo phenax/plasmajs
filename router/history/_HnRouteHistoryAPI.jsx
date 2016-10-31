@@ -8,18 +8,18 @@ import { checkUrlMatch } from '../../lib/helper.jsx';
  */
 export default class _HnRouteHistoryAPI {
 
-	_isAMatch(url1, currentUrl, isCaseInsensitive) {
+	_isAMatch(url1, currentUrl, isCaseInsensitive=false, method1, method2) {
 
 		// For case insensitive strings
 		if(typeof(url1) === "string" && isCaseInsensitive) {
 			return (url1.toLowerCase() === currentUrl.toLowerCase());
 		}
 
-		return checkUrlMatch(url1, currentUrl);
+		return checkUrlMatch(url1, currentUrl, method1, method2);
 	}
 
 
-	_findMatchRoute(routes, currentUrl) {
+	_findMatchRoute(routes, currentUrl, currentMethod) {
 
 		let errorRoute= null;
 
@@ -36,8 +36,15 @@ export default class _HnRouteHistoryAPI {
 				continue;
 
 			// Check if route matches and return it
-			if(this._isAMatch(routes[i].path, currentUrl, routes[i].caseInsensitive))
-				return routes[i];
+			if(
+				this._isAMatch(
+					routes[i].path, 
+					currentUrl, 
+					routes[i].caseInsensitive, 
+					routes[i].method, 
+					currentMethod
+				)
+			) return routes[i];
 		}
 
 		return errorRoute;

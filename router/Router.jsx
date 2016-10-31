@@ -22,8 +22,6 @@ export class Route extends React.Component {
 
 Route.propTypes= {
 
-	// props: React.PropTypes.,
-
 	caseInsensitive: React.PropTypes.bool,
 
 	statusCode: React.PropTypes.number,
@@ -31,6 +29,8 @@ Route.propTypes= {
 	errorHandler: React.PropTypes.bool,
 
 	controller: React.PropTypes.func,
+
+	method: React.PropTypes.string,
 
 	component: React.PropTypes.func.isRequired
 };
@@ -51,7 +51,10 @@ export class Router extends React.Component {
 
 		this._routes= 
 			this.props.children
-				.filter( comp => (comp.type === (<Route component={()=>{}} />).type) )
+				.filter(
+					comp => 
+						(comp.type === (<Route component={()=>null} />).type)
+				)
 				.map( val => val.props );
 
 		if(!(this.props.history instanceof _HnRouteHistoryAPI))

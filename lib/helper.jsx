@@ -16,17 +16,25 @@ export function renderTemplate(Element, props={}) {
 	return html;
 }
 
-export function checkUrlMatch(url, reqUrl) {
+export function checkUrlMatch(url, reqUrl, method1='GET', method2='GET') {
+
+	let isAMatch= false;
 
 	if(typeof(url.test) === 'function') {
 
-		return url.test(reqUrl);
+		isAMatch= url.test(reqUrl);
 
 	} else if(typeof(url) === 'string') {
 
-		return url === reqUrl;
+		isAMatch= url === reqUrl;
 
 	}
 
-	return false;
+	// Does the method name match?
+	if(isAMatch) {
+		if(method1.toLowerCase() !== method2.toLowerCase())
+			isAMatch= false;
+	}
+
+	return isAMatch;
 }
