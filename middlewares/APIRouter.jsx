@@ -11,7 +11,7 @@ export class APIRoute extends MiddleWare {
 		this.emitError= this.emitError.bind(this);
 		this.emitResponse= this.emitResponse.bind(this);
 
-		if(checkUrlMatch(this.props.path, this.props.request.url)) {
+		if(checkUrlMatch(this.props.path, this.props.request.url, this.props.request.method, this.props.method)) {
 
 			this.triggerAPIResponse();
 		}
