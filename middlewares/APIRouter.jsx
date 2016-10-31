@@ -6,37 +6,53 @@ import { checkUrlMatch } from '../lib/helper.jsx';
 
 export class APIRoute extends MiddleWare {
 
-	onRequest(req, res) {
+	onRequest() {
 
-		if(checkUrlMatch(this.props.path, req.url)) {
+		this.emitError= this.emitError.bind(this);
+		this.emitResponse= this.emitResponse.bind(this);
 
-			this.triggerAPIResponse(res);
+		if(checkUrlMatch(this.props.path, this.props.request.url)) {
+
+			this.triggerAPIResponse();
 		}
 	}
 
+	emitError(e) {
 
-	triggerAPIResponse(res) {
+		this.hasResponded= true;
+
+		this.props.response.statusCode= 500;
+
+		this.props.response.json(e || {});
+	}
+
+	emitResponse(data) {
+		
+		this.hasResponded= true;
+		
+		this.props.response.json(data || {})
+	}
+
+	triggerAPIResponse() {
 
 		this.terminate();
 
-		const emitError= (e) => {
-
-			res.statusCode= 500;
-
-			res.json(e || {});
-		};
-
-		res.statusCode= 200;
+		this.props.response.statusCode= 200;
 	
 		if(this.props.controller) {
 
-			const callbackHandler= (data) => res.json(data || {});
+			this.hasResponded= false;
 
-			this.props.controller(callbackHandler, emitError);
+			const promise= this.props.controller(this.emitResponse, this.emitError);
+
+			if(!this.hasResponded && promise)
+				promise
+					.then(this.emitResponse)
+					.catch(this.emitError);
 
 		} else {
 
-			emitError({
+			this.emitError({
 				error: 'You need to specify the controller for the APIRoute'
 			});
 		}
