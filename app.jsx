@@ -13,6 +13,7 @@ export * from './MiddleWare.jsx';
 
 // Default middlewares
 export * from './middlewares/APIRouter.jsx';
+export * from './middlewares/StaticContentRouter.jsx';
 export * from './middlewares/Logger.jsx';
 
 
