@@ -26,8 +26,6 @@ export class Server extends React.Component {
 		const $terminalComponents=
 			this.props.children
 				.filter( val => val.isTerminalResponse );
-
-		console.log($terminalComponents);
 		
 		if($terminalComponents.length > 0)  {
 			return null;

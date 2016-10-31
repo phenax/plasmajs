@@ -1,29 +1,34 @@
 #! /usr/bin/env node
 
 const path= require('path');
-require('babel-register')(
-	{
-		presets: [ 'es2015', 'react' ],
-		plugins: [ 'transform-object-rest-spread' ]
-	}
-);
+const defConf= {
+	presets: [ 'es2015', 'react' ],
+	plugins: [ 'transform-object-rest-spread' ]
+};
 
-const { NodeServer }= require('./app.jsx');
+require('babel-register')();
 
 const fileName= process.argv[2];
 
 let App;
 
+console.log(path.resolve(fileName));
+
 try {
 	App= require(path.resolve(fileName)).default;
+
+	if(!App) {
+		throw new Error("You need to export an app component. (Eg - export default class App extends React.Component {})");
+	}
+
 } catch(e) {
-	console.log("Module not found ", e);
+	console.log(e);
 	process.exit(1);
 }
 
-const Server= App.NodeServer || NodeServer;
+const ServerWrapper= App.NodeServer || require('./app.jsx').NodeServer;
 
-const server= new Server(App);
+const server= new ServerWrapper(App);
 
 server.createServer();
 server.start();
