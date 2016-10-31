@@ -22,6 +22,8 @@ export class Route extends React.Component {
 
 Route.propTypes= {
 
+	// props: React.PropTypes.,
+
 	caseInsensitive: React.PropTypes.bool,
 
 	statusCode: React.PropTypes.number,
