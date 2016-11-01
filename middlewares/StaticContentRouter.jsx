@@ -4,11 +4,18 @@ import path from 'path';
 
 import {MiddleWare} from '../MiddleWare.jsx';
 
+
+/**
+ * Middleware to host static content on the server
+ */
 export class StaticContentRouter extends MiddleWare {
 
 	onRequest(req, res) {
 
+		// Defaults to a directory called static in the project root
 		this.publicDir= this.props.dir || 'static';
+
+		// Defaults to true because its faster
 		this.hasPrefix= (this.props.hasPrefix == null)? true: this.props.hasPrefix;
 
 
@@ -31,32 +38,38 @@ export class StaticContentRouter extends MiddleWare {
 		}
 	}
 
-	fetchFileContents() {
-		const projectDir= path.resolve('.');
-		console.log(path.resolve(projectDir, './'+this.props.request.url ));
-		console.log(path.resolve(projectDir, this.publicDir + '/' + this.props.request.url ));
+	fetchFileContents(currentUrl) {
 
-		// TODO: Set for prefixes
+		// The base directory for the project i.e. root project directory
+		const projectDir= path.resolve('.');
+
+		// Read file and return string
+		// TODO: Make this asynchronous with streams
 		return fs.readFileSync(
+		
 			(this.hasPrefix) ?
-				path.resolve(projectDir, './'+this.props.request.url ) :                     // Has prefix i.e. static content url will be /${publicDir}/whatever
-				path.resolve(projectDir, this.publicDir + '/' + this.props.request.url )     // No prefix i.e. static content url will be  /whatever
+				
+				// Has prefix i.e. static content url will be /${publicDir}/whatever
+				path.resolve(projectDir, './' + currentUrl ) :
+
+				// No prefix i.e. static content url will be  /whatever
+				path.resolve(projectDir, this.publicDir + '/' + currentUrl )
 		);
 	}
 
+	// Send the file contents to the server
 	sendFileContents() {
 
 		try {
 
-			let contents= this.fetchFileContents();
+			// If the file wasnt found, stop here and let the router handler stuff
+			let contents= this.fetchFileContents(this.props.request.url);
 
 			this.terminate();
 
 			this.props.response.end(contents);
 
-		} catch(e) {
-			console.log("File not found");
-		}
+		} catch(e) { }
 	}
 }
 
