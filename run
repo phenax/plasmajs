@@ -13,14 +13,17 @@ const fileName= process.argv[2];
 let App;
 
 try {
+
 	App= require(path.resolve(fileName)).default;
 
 	if(!App) {
-		throw new Error("You need to export an app component. (Eg - export default class App extends React.Component {})");
+		throw new Error("You need to export a React component class");
 	}
 
 } catch(e) {
+
 	console.log(e);
+
 	process.exit(1);
 }
 

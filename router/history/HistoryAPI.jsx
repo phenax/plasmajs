@@ -1,7 +1,7 @@
 
-import _HnRouteHistoryAPI from './_HnRouteHistoryAPI';
+import _HnRouteHistoryAPI from './_HnRouteHistoryAPI.jsx';
 
-import * as events from './events';
+import * as events from './events.jsx';
 
 
 /**

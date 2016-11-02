@@ -1,7 +1,7 @@
 
-import _HnRouteHistoryAPI from './_HnRouteHistoryAPI';
+import _HnRouteHistoryAPI from './_HnRouteHistoryAPI.jsx';
 
-import {routerConfig} from './events';
+import {routerConfig} from './events.jsx';
 
 
 /**

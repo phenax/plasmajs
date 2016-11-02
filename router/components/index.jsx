@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { triggerUpdate, routerConfig } from '../history/events';
+import { triggerUpdate, routerConfig } from '../history/events.jsx';
 
 
 /**

@@ -37,7 +37,7 @@ export class Server extends React.Component {
 }
 
 
-// Http server helper class
+// Http(s) server wrapper
 export class NodeServer {
 
 	constructor(App) {
@@ -74,8 +74,15 @@ export class NodeServer {
 
 	// Start the server
 	start() {
-		this.server.listen(this.port, ()=> {
-			console.log(`Listening on port ${this.port}...`);
+		
+		return new Promise((resolve, reject) => {
+			
+			this.server.listen(this.port, _ => {
+				
+				console.log(`Listening on port ${this.port}...`);
+				
+				resolve(_);
+			});
 		});
 	}
 
@@ -106,12 +113,14 @@ export class NodeServer {
 
 			// XML response
 			xml() {
+				// TODO: Fix the mime-type
 				res.respondWith(str, 'text/plain');
 			},
 		});
 	}
 
 
+	// Request callback
 	_requestHandler(req, res, reqCallback) {
 
 		const response= this._wrapResponse(res);

@@ -3,8 +3,8 @@ import React from 'react';
 
 import _HnRouteHistoryAPI from './history/_HnRouteHistoryAPI.jsx';
 
-export * from './history';
-export * from './components';
+export * from './history/index.jsx';
+export * from './components/index.jsx';
 
 // Error components
 const DEFAULTERROR= 'Something went wrong';
@@ -38,7 +38,7 @@ Route.propTypes= {
 
 
 /**
- * Routing wrapper for specifying router elements
+ * Router wrapper
  */
 export class Router extends React.Component {
 
@@ -61,6 +61,8 @@ export class Router extends React.Component {
 			throw new Error(HISTORYTYPEERROR);
 	}
 
+
+	// Life cycle methods only executes on the client-side
 	componentDidMount() {
 
 		this.props.history
