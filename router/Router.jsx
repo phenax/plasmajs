@@ -115,8 +115,11 @@ export class Router extends React.Component {
 		// Either render the route component or wrap it in a wrapper and render
 		let $renderComponent= route.$component;
 
-		if(typeof(this.props.wrapper) === 'function') {
+		// If its on the serverside and the wrapper is a function
+		if(this.props.history.response && typeof(this.props.wrapper) === 'function') {
+
 			const Wrapper= this.props.wrapper;
+
 			$renderComponent= <Wrapper>{route.$component}</Wrapper>;
 		}
 
