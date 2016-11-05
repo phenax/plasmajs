@@ -1,7 +1,7 @@
 
 import http from 'http';
 import https from 'https';
-import React from 'react';
+import { createElement, Component } from 'react';
 
 import { renderTemplate } from './lib/helper.jsx';
 
@@ -20,7 +20,7 @@ export * from './middlewares/Logger.jsx';
 
 
 // Wrapping element for the configuration(Doesnt do for now)
-export class Server extends React.Component {
+export class Server extends Component {
 
 	render() {
 
@@ -32,7 +32,7 @@ export class Server extends React.Component {
 			return null;
 		}
 
-		return <html>{this.props.children}</html>;
+		return createElement('html', {}, this.props.children);
 	}
 }
 

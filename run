@@ -6,7 +6,21 @@ const defConf= {
 	plugins: [ 'transform-object-rest-spread' ]
 };
 
-require('babel-register')();
+require('babel-register')({
+
+	ignore: (name) => {
+
+		if(name.includes('node_modules/plasmajs')) {
+			return false;
+		}
+
+		if(name.includes('node_modules')) {
+			return true;
+		}
+
+		return false;
+	}
+});
 
 const fileName= process.argv[2];
 
@@ -22,7 +36,7 @@ try {
 
 } catch(e) {
 
-	console.log(e);
+	console.log("ERROR:", e);
 
 	process.exit(1);
 }
