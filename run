@@ -1,12 +1,25 @@
 #! /usr/bin/env node
 
+
 const path= require('path');
 const defConf= {
 	presets: [ 'es2015', 'react' ],
 	plugins: [ 'transform-object-rest-spread' ]
 };
 
-require('babel-register')();
+require('babel-register')({
+
+	ignore: (name) => {
+
+		if(name.includes('node_modules/plasmajs')) {
+			return false;
+		} else if(name.includes('node_modules')) {
+			return true;
+		}
+
+		return false;
+	}
+});
 
 const fileName= process.argv[2];
 
@@ -15,14 +28,14 @@ let App;
 try {
 
 	App= require(path.resolve(fileName)).default;
-
+	
 	if(!App) {
 		throw new Error("You need to export a React component class");
 	}
 
 } catch(e) {
 
-	console.log(e);
+	console.log("ERROR:", e);
 
 	process.exit(1);
 }
