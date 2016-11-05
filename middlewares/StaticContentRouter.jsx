@@ -29,7 +29,6 @@ export class StaticContentRouter extends MiddleWare {
 
 			// If the url starts with /${publicDir}/
 			if(publicPathRegex.test(req.url)) {
-				console.log("public start");
 				this.sendFileContents();
 			}
 
@@ -44,7 +43,7 @@ export class StaticContentRouter extends MiddleWare {
 		const projectDir= path.resolve('.');
 
 		// Read file and return string
-		// TODO: Make this asynchronous with streams
+		// TODO: Make this asynchronous (Stream maybe?)
 		return fs.readFileSync(
 		
 			(this.hasPrefix) ?

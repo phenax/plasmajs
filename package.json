@@ -1,17 +1,17 @@
 {
-  "name": "react-node",
-  "version": "0.0.2",
-  "description": "Declarative NodeJS framework with React",
+  "name": "plasmajs",
+  "version": "0.1.0",
+  "description": "Isomorphic nodeJS framework powered with react",
   "main": "app.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "react-node": "./run"
+    "plasmajs": "./run"
   },
   "repository": {
     "type": "git",
-    "url": "__placeholder__"
+    "url": "https://github.com/phenax/plasmajs.git"
   },
   "keywords": [
     "react",
