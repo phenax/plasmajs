@@ -13,13 +13,9 @@ require('babel-register')({
 
 		if(name.includes('node_modules/plasmajs')) {
 			return false;
-<<<<<<< HEAD
 		}
 
 		if(name.includes('node_modules')) {
-=======
-		} else if(name.includes('node_modules')) {
->>>>>>> 754eab24f1804b85b8ed0021f457f3f9308e4edf
 			return true;
 		}
 
