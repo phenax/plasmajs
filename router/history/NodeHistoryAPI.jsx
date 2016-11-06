@@ -16,6 +16,11 @@ export class NodeHistoryAPI extends _HnRouteHistoryAPI {
 		this._req= req;
 		this.response= res;
 
+		this._defaultErrorHandler= {
+			errorHandler: true,
+			component: createElement('div', {}, '404 Not Found');
+		};
+
 		routerConfig.type= 'node';
 	}
 
@@ -26,7 +31,7 @@ export class NodeHistoryAPI extends _HnRouteHistoryAPI {
 		this._currentUrl= this._req.url;
 
 		// Find the best match
-		const route= this._findMatchRoute(routes, this._currentUrl, this._req.method);
+		const route= this._findMatchRoute(routes, this._currentUrl, this._req.method) || this._defaultErrorHandler;
 
 		// Set the response status code
 		this.response.statusCode= (route.errorHandler)? 404: (route.statusCode || 200);
