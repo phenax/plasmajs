@@ -1,4 +1,4 @@
-
+import {createElement} from 'react';
 import _HnRouteHistoryAPI from './_HnRouteHistoryAPI.jsx';
 
 import {routerConfig} from './events.jsx';
@@ -18,7 +18,7 @@ export class NodeHistoryAPI extends _HnRouteHistoryAPI {
 
 		this._defaultErrorHandler= {
 			errorHandler: true,
-			component: createElement('div', {}, '404 Not Found');
+			component: createElement('div', {}, '404 Not Found')
 		};
 
 		routerConfig.type= 'node';
