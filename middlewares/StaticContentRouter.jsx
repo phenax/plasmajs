@@ -68,52 +68,59 @@ export class StaticContentRouter extends MiddleWare {
 
 			// If the file wasnt found, stop here and let the router handler stuff
 			let fileStream$= this.fetchFileContents(this.props.request.url);
-		
+
 			// Stop rendering other stuff because this is the stuff needed
 			this.terminate();
 
-			// Wrapper for the response stream
-			let response$= this._compressStream(this.props.response);
-			fileStream$.pipe(response$);
-
-			// Set the mimetype of the file request
+			// Set the mime-type of the file requested
 			this.props.response
 				.setHeader(
 					'Content-Type', 
-					mime.lookup(fileStream$.path) || 'text/plain'
+					mime.lookup(this.props.request.url) || 'text/plain'
 				);
 
-		} catch(e) { console.log(e); }
+			// Wrapper for the response stream
+			fileStream$= this._compressStream(fileStream$);
+
+			fileStream$.pipe(this.props.response);
+
+		} catch(e) { if(this.hadPrefix) console.log(e); }
 	}
 
 	_compressStream(stream$) {
 
-		if(!this.props.compress)
-			return stream$;
+		if(!this.props.compress) return stream$;
+
+		const GZIP= 'gzip';
+		const DEFL= 'deflate';
 
 		let compressionType= null;
 
 		const acceptEncoding = this.props.request.headers['accept-encoding'] || '';
 
 		// Identify the compression supported
-		if (acceptEncoding.includes('gzip'))
-			compressionType= 'gzip';
-		else if (acceptEncoding.includes('deflate'))
-			compressionType= 'deflate';
+		if (acceptEncoding.includes(GZIP))
+			compressionType= GZIP;
+		else if (acceptEncoding.includes(DEFL))
+			compressionType= DEFL;
 
 		// If compression is supported
 		if(compressionType) {
 
-			// this.props.response.writeHead(200, { 'Content-Encoding': compressionType });
+			this.props.response.writeHead(200, { 'Content-Encoding': compressionType });
 
-			const outer$= (compressionType === 'gzip')? createGzip(): createDeflate();
-			
-			return outer$.pipe(this.props.response);
+			const outer$= (compressionType === GZIP)? createGzip(): createDeflate();
+
+			return stream$.pipe(outer$);
 		}
 
 		return stream$;
 	}
 }
+
+
+
+
 
 StaticContentRouter.propTypes= {
 
