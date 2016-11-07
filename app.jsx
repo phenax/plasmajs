@@ -15,6 +15,7 @@ export * from './MiddleWare.jsx';
 export * from './middlewares/APIRouter.jsx';
 export * from './middlewares/StaticContentRouter.jsx';
 export * from './middlewares/Logger.jsx';
+export * from './middlewares/Compressor.jsx';
 
 
 

@@ -1,6 +1,11 @@
 import {PropTypes} from 'react';
 import fs from 'fs';
 import path from 'path';
+import mime from 'mime';
+import {
+	createGzip,
+	createDeflate
+} from 'zlib';
 
 import {MiddleWare} from '../MiddleWare.jsx';
 
@@ -44,7 +49,7 @@ export class StaticContentRouter extends MiddleWare {
 
 		// Read file and return string
 		// TODO: Make this asynchronous (Stream maybe?)
-		return fs.readFileSync(
+		return fs.createReadStream(
 		
 			(this.hasPrefix) ?
 				
@@ -62,13 +67,51 @@ export class StaticContentRouter extends MiddleWare {
 		try {
 
 			// If the file wasnt found, stop here and let the router handler stuff
-			let contents= this.fetchFileContents(this.props.request.url);
-
+			let fileStream$= this.fetchFileContents(this.props.request.url);
+		
+			// Stop rendering other stuff because this is the stuff needed
 			this.terminate();
 
-			this.props.response.end(contents);
+			// Wrapper for the response stream
+			let response$= this._compressStream(this.props.response);
+			fileStream$.pipe(response$);
 
-		} catch(e) { }
+			// Set the mimetype of the file request
+			this.props.response
+				.setHeader(
+					'Content-Type', 
+					mime.lookup(fileStream$.path) || 'text/plain'
+				);
+
+		} catch(e) { console.log(e); }
+	}
+
+	_compressStream(stream$) {
+
+		if(!this.props.compress)
+			return stream$;
+
+		let compressionType= null;
+
+		const acceptEncoding = this.props.request.headers['accept-encoding'] || '';
+
+		// Identify the compression supported
+		if (acceptEncoding.includes('gzip'))
+			compressionType= 'gzip';
+		else if (acceptEncoding.includes('deflate'))
+			compressionType= 'deflate';
+
+		// If compression is supported
+		if(compressionType) {
+
+			// this.props.response.writeHead(200, { 'Content-Encoding': compressionType });
+
+			const outer$= (compressionType === 'gzip')? createGzip(): createDeflate();
+			
+			return outer$.pipe(this.props.response);
+		}
+
+		return stream$;
 	}
 }
 
@@ -76,5 +119,7 @@ StaticContentRouter.propTypes= {
 
 	dir: PropTypes.string.isRequired,
 
-	hasPrefix: PropTypes.bool
+	hasPrefix: PropTypes.bool,
+
+	compress: PropTypes.bool
 }
