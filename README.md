@@ -127,6 +127,7 @@ import {StaticContentRouter} from 'plasmajs'
 - Props
   - dir (string)         - The name of the static content folder to host
   - hasPrefix (boolean)  - If set to false, will route it as http://example.com/file instead of http://example.com/public/file
+  - compress (boolean)   - If true, will enable gzip compression on all static content if the client supports it
 
 <br />
 
