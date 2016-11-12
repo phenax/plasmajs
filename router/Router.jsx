@@ -3,9 +3,6 @@ import React from 'react';
 
 import _HnRouteHistoryAPI from './history/_HnRouteHistoryAPI.jsx';
 
-export * from './history/index.jsx';
-export * from './components/index.jsx';
-
 // Error components
 const DEFAULTERROR= 'Something went wrong';
 const NULLCOMPONENTERROR= 'The component cannot be null';

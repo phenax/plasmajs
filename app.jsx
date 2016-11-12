@@ -6,7 +6,7 @@ import { createElement, Component } from 'react';
 import { renderTemplate } from './lib/helper.jsx';
 
 // Router
-export * from './router/Router.jsx';
+export * from './router/server.jsx';
 
 // MiddleWare super class
 export * from './MiddleWare.jsx';
@@ -25,15 +25,18 @@ export class Server extends Component {
 
 	render() {
 
+		// All middlewares that have called the .terminate()
 		const $terminalComponents=
 			this.props.children
 				.filter( val => val.isTerminalResponse );
 		
+		// If atleast one middleware has called the .terminate, return null;
 		if($terminalComponents.length > 0)  {
 			return null;
 		}
 
-		return createElement('html', {}, this.props.children);
+		// Else wrap the childern in an html element and render
+		return createElement('html', this.props.html || {}, this.props.children);
 	}
 }
 
