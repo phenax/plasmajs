@@ -1,6 +1,9 @@
 
 import http from 'http';
 import https from 'https';
+import mime from 'mime';
+import fs from 'fs';
+
 import { createElement, Component } from 'react';
 
 import { renderTemplate } from './lib/helper.jsx';
@@ -15,7 +18,8 @@ export * from './MiddleWare.jsx';
 export * from './middlewares/APIRouter.jsx';
 export * from './middlewares/StaticContentRouter.jsx';
 export * from './middlewares/Logger.jsx';
-export * from './middlewares/Compressor.jsx';
+// export * from './middlewares/Compressor.jsx';
+export * from './middlewares/ServiceWorkers.jsx';
 
 
 
@@ -90,8 +94,43 @@ export class NodeServer {
 		});
 	}
 
+
+
+///// EXPERIMENT
+
+	// Send the file contents to the server
+	sendFileContents() {
+
+		try {
+
+			// If the file wasnt found, stop here and let the router handler stuff
+			let fileStream$= this.fetchFileContents(this.props.request.url);
+
+			// Stop rendering other stuff because this is the stuff needed
+			this.terminate();
+
+			// Set the mime-type of the file requested
+			this.props.response
+				.setHeader(
+					'Content-Type', 
+					mime.lookup(this.props.request.url) || 'text/plain'
+				);
+
+			// Wrapper for the response stream
+			fileStream$= this._compressStream(fileStream$);
+
+			fileStream$.pipe(this.props.response);
+
+		} catch(e) { if(this.hadPrefix) console.log(e); }
+	}
+
+
+///////////////////////////////////////////////////////
+
+
+
 	// Extend the response with additional functionality
-	_wrapResponse(res) {
+	_wrapResponse(req, res) {
 
 		return Object.assign(res, {
 
@@ -120,6 +159,43 @@ export class NodeServer {
 				// TODO: Fix the mime-type
 				res.respondWith(str, 'text/plain');
 			},
+
+			compressStream(stream$) {
+
+				return stream$;
+			},
+
+			// For sending files
+			sendFile(fileName, config) {
+
+				config= config || {};
+				config.error= config.error || (()=> {});
+				config.success= config.success || (()=> {});
+
+				try {
+
+					// If the file wasnt found, stop here and let the router handler stuff
+					let fileStream$= fs.createReadStream(fileName);
+
+					// The file was found without any errors
+					config.success();
+
+					// Set the mime-type of the file requested
+					res.setHeader(
+						'Content-Type', 
+						mime.lookup(fileName) || 'text/plain'
+					);
+
+					if(config.compress) {
+						fileStream$= res.compressStream(fileStream$);
+					}
+
+					fileStream$.pipe(res);
+
+				} catch(e) {
+					config.error(e);
+				}
+			}
 		});
 	}
 
@@ -127,7 +203,7 @@ export class NodeServer {
 	// Request callback
 	_requestHandler(req, res, reqCallback) {
 
-		const response= this._wrapResponse(res);
+		const response= this._wrapResponse(req, res);
 
 		// Callback
 		reqCallback(req, res);

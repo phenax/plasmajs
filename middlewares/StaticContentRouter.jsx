@@ -1,7 +1,6 @@
 import {PropTypes} from 'react';
 import fs from 'fs';
 import path from 'path';
-import mime from 'mime';
 import {
 	createGzip,
 	createDeflate
@@ -42,49 +41,40 @@ export class StaticContentRouter extends MiddleWare {
 		}
 	}
 
-	fetchFileContents(currentUrl) {
+	getFileAbsolutePath(currentUrl) {
 
 		// The base directory for the project i.e. root project directory
 		const projectDir= path.resolve('.');
 
 		// Read file and return string
-		// TODO: Make this asynchronous (Stream maybe?)
-		return fs.createReadStream(
-		
-			(this.hasPrefix) ?
+		return (this.hasPrefix) ?
 				
 				// Has prefix i.e. static content url will be /${publicDir}/whatever
 				path.resolve(projectDir, './' + currentUrl ) :
 
 				// No prefix i.e. static content url will be  /whatever
-				path.resolve(projectDir, this.publicDir + '/' + currentUrl )
-		);
+				path.resolve(projectDir, this.publicDir + '/' + currentUrl );
 	}
 
 	// Send the file contents to the server
 	sendFileContents() {
 
-		try {
+		// If the file wasnt found, stop here and let the router handler stuff
+		const fileToFetch= this.getFileAbsolutePath(this.props.request.url);
 
-			// If the file wasnt found, stop here and let the router handler stuff
-			let fileStream$= this.fetchFileContents(this.props.request.url);
+		// Send a file
+		this.props.response.sendFile(fileToFetch, {
+			compress: !!this.props.compress,
+			error: (e)=> {
+				console.log("nada", e);
+			},
+			success: ()=> {
 
-			// Stop rendering other stuff because this is the stuff needed
-			this.terminate();
+				// Stop rendering other stuff because this is the stuff needed
+				this.terminate();
+			}
+		});
 
-			// Set the mime-type of the file requested
-			this.props.response
-				.setHeader(
-					'Content-Type', 
-					mime.lookup(this.props.request.url) || 'text/plain'
-				);
-
-			// Wrapper for the response stream
-			fileStream$= this._compressStream(fileStream$);
-
-			fileStream$.pipe(this.props.response);
-
-		} catch(e) { if(this.hadPrefix) console.log(e); }
 	}
 
 	_compressStream(stream$) {
