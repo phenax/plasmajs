@@ -12,7 +12,7 @@ export class ServiceWorker extends MiddleWare {
 		super(props);
 
 		this.successScript = this.props.success || (()=> console.log("Service Worker was registered successfully"));
-		this.errorScript   = this.props.error   || (()=> console.warn("Service worker registration failed ", error));
+		this.errorScript   = this.props.error   || ((e)=> console.warn("Service worker registration failed ", e));
 		this.swPathName    = this.props.path    || '/serviceWorker.js';
 	}
 

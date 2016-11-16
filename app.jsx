@@ -3,6 +3,10 @@ import http from 'http';
 import https from 'https';
 import mime from 'mime';
 import fs from 'fs';
+import {
+	createGzip,
+	createDeflate
+} from 'zlib';
 
 import { createElement, Component } from 'react';
 
@@ -96,39 +100,6 @@ export class NodeServer {
 
 
 
-///// EXPERIMENT
-
-	// Send the file contents to the server
-	sendFileContents() {
-
-		try {
-
-			// If the file wasnt found, stop here and let the router handler stuff
-			let fileStream$= this.fetchFileContents(this.props.request.url);
-
-			// Stop rendering other stuff because this is the stuff needed
-			this.terminate();
-
-			// Set the mime-type of the file requested
-			this.props.response
-				.setHeader(
-					'Content-Type', 
-					mime.lookup(this.props.request.url) || 'text/plain'
-				);
-
-			// Wrapper for the response stream
-			fileStream$= this._compressStream(fileStream$);
-
-			fileStream$.pipe(this.props.response);
-
-		} catch(e) { if(this.hadPrefix) console.log(e); }
-	}
-
-
-///////////////////////////////////////////////////////
-
-
-
 	// Extend the response with additional functionality
 	_wrapResponse(req, res) {
 
@@ -160,15 +131,26 @@ export class NodeServer {
 				res.respondWith(str, 'text/plain');
 			},
 
-			compressStream(stream$) {
+			compressStream(stream$, getCompressionType) {
+
+				const compressionType= getCompressionType();
+
+				// If compression is supported
+				if(compressionType) {
+
+					res.writeHead(200, { 'Content-Encoding': compressionType });
+
+					const outer$= (compressionType === 'gzip')? createGzip(): createDeflate();
+
+					return stream$.pipe(outer$);
+				}
 
 				return stream$;
 			},
 
 			// For sending files
-			sendFile(fileName, config) {
+			sendFile(fileName, config={}) {
 
-				config= config || {};
 				config.error= config.error || (()=> {});
 				config.success= config.success || (()=> {});
 
@@ -187,7 +169,7 @@ export class NodeServer {
 					);
 
 					if(config.compress) {
-						fileStream$= res.compressStream(fileStream$);
+						fileStream$= res.compressStream(fileStream$, config.compress);
 					}
 
 					fileStream$.pipe(res);

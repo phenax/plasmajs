@@ -1,10 +1,6 @@
 import {PropTypes} from 'react';
 import fs from 'fs';
 import path from 'path';
-import {
-	createGzip,
-	createDeflate
-} from 'zlib';
 
 import {MiddleWare} from '../MiddleWare.jsx';
 
@@ -64,7 +60,9 @@ export class StaticContentRouter extends MiddleWare {
 
 		// Send a file
 		this.props.response.sendFile(fileToFetch, {
-			compress: !!this.props.compress,
+
+			compress: this._canCompress.bind(this),
+
 			error: (e)=> {
 				console.log("nada", e);
 			},
@@ -74,17 +72,17 @@ export class StaticContentRouter extends MiddleWare {
 				this.terminate();
 			}
 		});
-
 	}
 
-	_compressStream(stream$) {
+	_canCompress() {
 
-		if(!this.props.compress) return stream$;
+		if(!this.props.compress)
+			return false;
 
 		const GZIP= 'gzip';
 		const DEFL= 'deflate';
 
-		let compressionType= null;
+		let compressionType= false;
 
 		const acceptEncoding = this.props.request.headers['accept-encoding'] || '';
 
@@ -94,21 +92,9 @@ export class StaticContentRouter extends MiddleWare {
 		else if (acceptEncoding.includes(DEFL))
 			compressionType= DEFL;
 
-		// If compression is supported
-		if(compressionType) {
-
-			this.props.response.writeHead(200, { 'Content-Encoding': compressionType });
-
-			const outer$= (compressionType === GZIP)? createGzip(): createDeflate();
-
-			return stream$.pipe(outer$);
-		}
-
-		return stream$;
+		return compressionType;
 	}
 }
-
-
 
 
 
