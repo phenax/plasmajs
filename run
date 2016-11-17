@@ -2,10 +2,10 @@
 
 
 const path= require('path');
-const defConf= {
-	presets: [ 'es2015', 'react' ],
-	plugins: [ 'transform-object-rest-spread' ]
-};
+// const defConf= {
+// 	presets: [ 'es2015', 'react' ],
+// 	plugins: [ 'transform-object-rest-spread' ]
+// };
 
 require('babel-register')({
 
@@ -23,6 +23,15 @@ require('babel-register')({
 	}
 });
 
+
+// 
+// TODO: Add more command-line arguments for more configurations
+// 
+if(process.argv.length < 3) {
+	console.log('Usage: plasmajs ./your-server.js');
+	process.exit(0);
+}
+
 const fileName= process.argv[2];
 
 let App;
@@ -37,15 +46,54 @@ try {
 
 } catch(e) {
 
-	console.log("ERROR:", e);
+	console.error("ERROR:", e);
 
 	process.exit(1);
 }
 
-const ServerWrapper= App.NodeServer || require('./app.jsx').NodeServer;
 
-const server= new ServerWrapper(App);
+// NodeServer class
+const NodeServer= App.NodeServer || require('./app.jsx').NodeServer;
 
-server.createServer();
-server.start();
+// Creates and starts a new server instance
+function startNewServer() {
+
+	const plasmaJSServer= new NodeServer(App);
+
+	return plasmaJSServer.createServer().start();
+}
+
+
+// If the user has enabled cluster in the app
+if(App.cluster && typeof App.cluster === 'object') {
+
+	const cluster= require('cluster');
+
+	if(cluster.isMaster) {
+		
+		for(let i= 0; i< App.cluster.count; i++) {
+			cluster.fork();
+		}
+
+		if(typeof App.cluster.master === 'function') {
+			App.cluster.master();
+		}
+
+		cluster.on('exit', ()=> {
+			cluster.fork();
+		});
+
+	} else {
+
+		startNewServer();
+
+		if(typeof App.cluster.notMaster === 'function') {
+			App.cluster.notMaster();
+		}
+	}
+
+} else {
+	startNewServer();	
+}
+
 

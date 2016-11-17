@@ -57,7 +57,7 @@ export class StaticContentRouter extends MiddleWare {
 
 		const STATIC_FILE_TIMER= 'Static file fetched';
 
-		// For having a check on performance
+		// For benchmarking
 		console.time(STATIC_FILE_TIMER);
 
 		// If the file wasnt found, stop here and let the router handler stuff

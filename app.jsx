@@ -98,8 +98,6 @@ export class NodeServer {
 		});
 	}
 
-
-
 	// Extend the response with additional functionality
 	_wrapResponse(req, res) {
 
@@ -159,7 +157,7 @@ export class NodeServer {
 					// Set the mime-type of the file requested
 					res.writeHead(200, { 'Content-Type': mime.lookup(fileName) || 'text/plain' });
 
-					// The file was found without any errors
+					// The file was found
 					resolve();
 
 					// If it needs compression, compress it
@@ -167,6 +165,7 @@ export class NodeServer {
 						fileStream$= res.compressStream(fileStream$, config.compress);
 					}
 
+					// pipe the file out to the response
 					fileStream$.pipe(res);
 				});
 			}
@@ -180,17 +179,19 @@ export class NodeServer {
 		const response= this._wrapResponse(req, res);
 
 		// Callback
-		reqCallback(req, res);
+		reqCallback(req, response);
 
+		process.nextTick( _ => {
 
-		// Render the template
-		const markup= renderTemplate(this._App, {
-			request: req,
-			response: response,
-			port: this.port
+			// Render the template
+			const markup= renderTemplate(this._App, {
+				request: req,
+				response: response,
+				port: this.port
+			});
+
+			if(!response.hasTerminated && markup)
+				response.send(markup);
 		});
-
-		if(!response.hasTerminated && markup)
-			res.end(markup);
 	}
 }
