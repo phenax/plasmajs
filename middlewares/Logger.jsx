@@ -13,11 +13,15 @@ export class Logger extends MiddleWare {
 		const DIM= '\x1b[2m';
 		const RED= '\x1b[31m';
 
-
 		const statusGroup= Math.floor(res.statusCode/100);
 		const statusColor= (statusGroup != 2 && statusGroup != 3)? RED: AQUA;
 
-		// Log
-		console.log(statusColor, `[${res.statusCode}]`, DEFAULT, DIM, `${req.method}`, DEFAULT, `${req.url}`);
+		// if(this.props.time)
+			// console.timeEnd(res.benchmarkNameSpace);
+
+		if(this.props.color)
+			console.log(statusColor, `[${res.statusCode}]`, DEFAULT, DIM, `${req.method}`, DEFAULT, `${req.url}`);
+		else
+			console.log(`[${res.statusCode}] ${req.method} ${req.url}`);
 	}
 }

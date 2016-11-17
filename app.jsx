@@ -24,6 +24,7 @@ export * from './middlewares/StaticContentRouter.jsx';
 export * from './middlewares/Logger.jsx';
 // export * from './middlewares/Compressor.jsx';
 export * from './middlewares/ServiceWorkers.jsx';
+export * from './middlewares/BlankMiddleWare.jsx';
 
 
 
