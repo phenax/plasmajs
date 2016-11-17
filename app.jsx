@@ -1,4 +1,5 @@
 
+import { createElement, Component } from 'react';
 import http from 'http';
 import https from 'https';
 import mime from 'mime';
@@ -8,28 +9,13 @@ import {
 	createDeflate
 } from 'zlib';
 
-import { createElement, Component } from 'react';
-
 import { renderTemplate } from './lib/helper.jsx';
 
-// Router
 export * from './router/server.jsx';
-
-// MiddleWare super class
 export * from './MiddleWare.jsx';
+export * from './middlewares';
 
-// Default middlewares
-export * from './middlewares/APIRouter.jsx';
-export * from './middlewares/StaticContentRouter.jsx';
-export * from './middlewares/Logger.jsx';
-// export * from './middlewares/Compressor.jsx';
-export * from './middlewares/ServiceWorkers.jsx';
-export * from './middlewares/BlankMiddleWare.jsx';
-
-
-
-
-// Wrapping element for the configuration(Doesnt do for now)
+// Wrapping element for the configuration
 export class Server extends Component {
 
 	render() {
@@ -201,3 +187,8 @@ export class NodeServer {
 		});
 	}
 }
+
+export default {
+	NodeServer,
+	Server
+};
