@@ -9,7 +9,6 @@ export class MiddleWare extends React.Component {
 		this.isMiddleWare= true;
 		this.isTerminalResponse= false;
 
-
 		if(this.onRequest)
 			this.onRequest(this.props.request, this.props.response);
 		else
@@ -22,14 +21,10 @@ export class MiddleWare extends React.Component {
 		this.isTerminalResponse= true;
 	}
 
-	render() {
-		return null;
-	}
+	render() { return null }
 }
 
 MiddleWare.propTypes= {
-
 	request: React.PropTypes.object.isRequired,
-
 	response: React.PropTypes.object.isRequired
 }

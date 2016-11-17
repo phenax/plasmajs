@@ -155,7 +155,8 @@ export class NodeServer {
 					let fileStream$= fs.createReadStream(fileName);
 
 					// Set the mime-type of the file requested
-					res.writeHead(200, { 'Content-Type': mime.lookup(fileName) || 'text/plain' });
+					res.statusCode= 200;
+					res.setHeader('Content-Type', mime.lookup(fileName) || 'text/plain');
 
 					// The file was found
 					resolve();
@@ -172,16 +173,18 @@ export class NodeServer {
 		});
 	}
 
-
 	// Request callback
 	_requestHandler(req, res, reqCallback) {
 
 		const response= this._wrapResponse(req, res);
 
-		// Callback
 		reqCallback(req, response);
 
 		process.nextTick( _ => {
+
+			const PAGE_RENDERING_TIMER= 'Page rendered';
+
+			console.time(PAGE_RENDERING_TIMER);
 
 			// Render the template
 			const markup= renderTemplate(this._App, {
@@ -190,8 +193,10 @@ export class NodeServer {
 				port: this.port
 			});
 
-			if(!response.hasTerminated && markup)
+			if(!response.hasTerminated && markup) {
 				response.send(markup);
+				console.timeEnd(PAGE_RENDERING_TIMER);
+			}
 		});
 	}
 }
