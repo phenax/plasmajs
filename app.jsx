@@ -106,29 +106,29 @@ export class NodeServer {
 		return Object.assign(res, {
 
 			respondWith(str, type) {
-				res.setHeader('Content-Type', type);
+				res.writeHead(200, { 'Content-Type': type });
 				res.end(str);
 			},
 
 			// For plain-text responses
 			text(str) {
-				res.respondWith(str, 'text/plain');
+				res.respondWith(str, mime.lookup('a.txt'));
 			},
 
 			// For html resonses
 			send(str) {
-				res.respondWith(str, 'text/html');
+				res.respondWith(str, mime.lookup('a.html'));
 			},
 
 			// For json responses
 			json(obj) {
-				res.respondWith(JSON.stringify(obj), 'application/json');
+				res.respondWith(JSON.stringify(obj), mime.lookup('a.json'));
 			},
 
 			// XML response
 			xml() {
 				// TODO: Fix the mime-type
-				res.respondWith(str, 'text/plain');
+				res.respondWith(str, mime.lookup('a.xml'));
 			},
 
 			compressStream(stream$, getCompressionType) {
@@ -151,32 +151,24 @@ export class NodeServer {
 			// For sending files
 			sendFile(fileName, config={}) {
 
-				config.error= config.error || (()=> {});
-				config.success= config.success || (()=> {});
-
-				try {
+				return new Promise((resolve, reject) => {
 
 					// If the file wasnt found, stop here and let the router handler stuff
 					let fileStream$= fs.createReadStream(fileName);
 
-					// The file was found without any errors
-					config.success();
-
 					// Set the mime-type of the file requested
-					res.setHeader(
-						'Content-Type', 
-						mime.lookup(fileName) || 'text/plain'
-					);
+					res.writeHead(200, { 'Content-Type': mime.lookup(fileName) || 'text/plain' });
 
+					// The file was found without any errors
+					resolve();
+
+					// If it needs compression, compress it
 					if(config.compress) {
 						fileStream$= res.compressStream(fileStream$, config.compress);
 					}
 
 					fileStream$.pipe(res);
-
-				} catch(e) {
-					config.error(e);
-				}
+				});
 			}
 		});
 	}

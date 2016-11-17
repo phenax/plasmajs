@@ -55,26 +55,39 @@ export class StaticContentRouter extends MiddleWare {
 	// Send the file contents to the server
 	sendFileContents() {
 
+		const STATIC_FILE_TIMER= 'Static file fetched';
+
+		// For having a check on performance
+		console.time(STATIC_FILE_TIMER);
+
 		// If the file wasnt found, stop here and let the router handler stuff
 		const fileToFetch= this.getFileAbsolutePath(this.props.request.url);
 
-		// Send a file
-		this.props.response.sendFile(fileToFetch, {
+		try {
 
-			compress: this._canCompress.bind(this),
-
-			error: (e)=> {
-				console.log("nada", e);
-			},
-			success: ()=> {
-
-				// Stop rendering other stuff because this is the stuff needed
+			// Got the file we were looking for
+			if(fs.statSync(fileToFetch).isFile())
 				this.terminate();
-			}
-		});
+			else
+				return false;
+		} catch(e) {
+			return false;
+		}
+
+		// Stream the file
+		this.props.response
+			.sendFile(fileToFetch, { compress: this._supportedCompression.bind(this) })
+			.then(()=> {
+				console.timeEnd(STATIC_FILE_TIMER);
+			})
+			.catch((e) => {
+				console.log("nada", e);
+			});
+
+		return true;
 	}
 
-	_canCompress() {
+	_supportedCompression() {
 
 		if(!this.props.compress)
 			return false;
