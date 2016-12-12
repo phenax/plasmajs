@@ -9,7 +9,7 @@ import {routerConfig} from './events.jsx';
  */
 export class MockHistoryAPI extends _HnRouteHistoryAPI {
 
-	constructor(req, res, urlGetter) {
+	constructor(req, res, currentUrl) {
 		super();
 
 		this._req= req;
@@ -20,7 +20,7 @@ export class MockHistoryAPI extends _HnRouteHistoryAPI {
 			component: createElement('div', {}, '404 Not Found')
 		};
 
-		this._urlGetter= urlGetter;
+		this._currentUrl= currentUrl;
 
 		routerConfig.type= 'node';
 	}
@@ -29,7 +29,7 @@ export class MockHistoryAPI extends _HnRouteHistoryAPI {
 	// Finds the best match for the current request from the routes
 	matchRoute(routes) {
 
-		this._currentUrl= this._urlGetter();
+		this._currentUrl= this._currentUrl;
 
 		// Find the best match
 		const route= this._findMatchRoute(routes, this._currentUrl, 'GET') || this._defaultErrorHandler;
