@@ -7,7 +7,7 @@ import {routerConfig} from './events.jsx';
 /**
  * Mock history api for testing
  */
-export class MockHistory extends _HnRouteHistoryAPI {
+export class MockHistoryAPI extends _HnRouteHistoryAPI {
 
 	constructor(req, res, urlGetter) {
 		super();

@@ -1,8 +1,14 @@
 
 import React from 'react';
 
+import {expect} from 'chai';
+
+
 import { Router, Route } from '../../router/server.jsx';
 import { MockHistoryAPI } from '../../router/history/MockHistoryAPI.jsx';
+
+import { renderComponent } from '../../lib/helper.jsx';
+import * as route from '../../lib/testHelpers.jsx';
 
 describe('Router', () => {
 
@@ -10,27 +16,23 @@ describe('Router', () => {
 
 	let currentUrl= '';
 
+	const setUrl= url => currentUrl= url;
+
 	const history= new MockHistoryAPI({}, {}, () => currentUrl);
-
-	const Wrapper= props => <div>{props.children}</div/>;
-	const Index= props => <div>Index</div/>;
-	const About= props => <div>About</div/>;
-
 
 	beforeEach(() => {
 
 		// Create a router and routes
-		allRoutes= (
-			<Router history={history} wrapper={wrapper}>
+		allRoutes= props => (
+			<Router history={history} wrapper={route.Wrapper}>
 
-				<Route path='/' component={Index} />
-				<Route path='/about' component={About} />
+				<Route path='/' component={route.Index} />
+				<Route path='/about' component={route.About} />
 
-				<Route errorHandler={true} component={() => <div>Error</div>} />
+				<Route errorHandler={true} component={route.Error404} />
 			</Router>
 		);
 	});
-
 
 	describe('Configuration', () => {
 
@@ -42,7 +44,13 @@ describe('Router', () => {
 	describe('Routing', () => {
 
 		it('should render the right route for path as a string', () => {
-			
+
+			setUrl('/');
+
+			const markup= renderComponent(allRoutes);
+
+			// Rendered route should be the index route
+			expect(markup).to.eql(route.indexString);
 		});
 
 		it('should render the right route for path as a regex', () => {
