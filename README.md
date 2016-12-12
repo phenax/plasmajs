@@ -1,5 +1,7 @@
 # PlasmaJS
-[![npm version](https://badge.fury.io/js/plasmajs.svg)](https://badge.fury.io/js/plasmajs)
+[![Build Status](https://travis-ci.org/phenax/plasmajs.svg?branch=master)](https://travis-ci.org/phenax/plasmajs)
+
+[![NPM](https://nodei.co/npm/plasmajs.png?downloadRank=true)](https://www.npmjs.com/package/plasmajs)
 
 An isomorphic NodeJS framework powered with React for building web apps.
 
@@ -20,8 +22,6 @@ An isomorphic NodeJS framework powered with React for building web apps.
 ## Installation
 * Install with npm ```npm i --save plasmajs```(you can also install it globally with ```npm i -g plasmajs```)
 * To run the server, ```plasmajs path/to/server.js```(Add it to your package.json scripts for local install)
-
-[![NPM](https://nodei.co/npm/plasmajs.png?downloadRank=true)](https://www.npmjs.com/package/plasmajs)
 
 <br />
 
