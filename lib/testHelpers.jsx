@@ -36,10 +36,21 @@ export const mockCtx= (url) => {
 
 	const ctx= {
 		calledFn: null,
+		calledWith: null,
+
 		request: { url },
-		response: {
-			json: _ => ctx.calledFn= 'response.json'
-		}
+
+		response: new Proxy({}, {
+
+			get: (target, field) => {
+
+				ctx.calledFn= `response.${field}`;
+
+				return (data) => {
+					ctx.calledWith= data;
+				};
+			}
+		})
 	};
 
 	return ctx;
