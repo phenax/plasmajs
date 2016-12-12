@@ -38,11 +38,31 @@ describe('Router', () => {
 
 					expect(child.type).to.eql((<Route component={() => {}} />).type);
 				});
+		});
 
-			expect(router.props.history).to.be.instanceof(MockHistoryAPI);
+		it('should have all the routes configured correctly', () => {
+
+			router.props.children
+				.forEach( child => {
+
+					expect(child.props.component).to.exist;
+					expect(child.props.component).to.be.instanceof(Function);
+
+					if(!child.props.errorHandler) {
+
+						expect(child.props.path).to.satisfy( path => {
+
+							if(
+								typeof path === 'string' || 
+								(typeof path === 'object' && 'test' in path)
+							) return true;
+
+							return false;
+						});
+					}
+				});
 		});
 	});
-
 
 
 	describe('Routing', () => {
@@ -71,6 +91,34 @@ describe('Router', () => {
 
 			// Rendered route should be the 404 error
 			expect(markup).to.eql(route.errorString);
+		});
+	});
+
+
+	describe('Controller', () => {
+
+		it('should be called', () => {
+
+			let wasControllerCalled= false;
+
+			const controller= 
+				_ => wasControllerCalled= true;
+
+			renderComponent(route.getRouter('/ctrlr', controller));
+
+			expect(wasControllerCalled).to.be.true;
+		});
+
+		it('should set props for component', () => {
+
+			const props= { name: 'It Works' };
+
+			const controller= 
+				setProps => setProps(props);
+
+			const markup= renderComponent(route.getRouter('/ctrlr', controller));
+
+			expect(markup).to.eql(route.getCtrlrString(props.name));
 		});
 	});
 });
