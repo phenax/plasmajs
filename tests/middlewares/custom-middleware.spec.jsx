@@ -1,0 +1,54 @@
+
+import React from 'react';
+
+import {expect} from 'chai';
+
+import { MiddleWare } from '../../MiddleWare.jsx';
+
+import { renderComponent } from '../../lib/helper.jsx';
+import { mockCtx } from '../../lib/testHelpers.jsx';
+
+describe('Custom Middleware', () => {
+
+	let wasCalled;
+
+	let callback;
+
+	let ctx;
+
+	class MockMiddleWare extends MiddleWare {
+
+		onRequest(req, res) {
+
+			wasCalled= true;
+
+			if(callback)
+				callback(() => this.terminate());
+		}
+	}
+
+	beforeEach(() => {
+
+		wasCalled= false;
+
+		ctx= mockCtx();
+	});
+
+
+	it('should call the onRequest method when rendered', () => {
+		renderComponent(() => <MockMiddleWare {...ctx} />);
+
+		expect(wasCalled).to.be.true;
+	});
+
+
+	it('should terminate when .terminate is called', () => {
+
+		callback= terminate => terminate();
+
+		renderComponent(() => <MockMiddleWare {...ctx} />);
+
+		expect(ctx.calledTarget.hasTerminated).to.be.true;
+	});
+
+});

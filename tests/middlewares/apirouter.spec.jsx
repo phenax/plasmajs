@@ -42,6 +42,8 @@ describe('APIRoute', () => {
 
 		expect(ctx.calledFn).to.eql('response.json');
 
+		expect(ctx.calledTarget.statusCode).to.eql(200);
+
 		expect(ctx.calledWith).to.eql(data);
 	});
 
@@ -50,8 +52,6 @@ describe('APIRoute', () => {
 
 		const data= { a: 'b' };
 
-		let callback= () => {};
-		
 		beforeEach((done) => {
 			
 			const controller= () => {
@@ -69,14 +69,16 @@ describe('APIRoute', () => {
 			renderComponent(component(controller));
 		});
 
-		it('should render json resolved by the promise', () => {
+		it('should render json resolved by the promise', (done) => {
 
 			// Slightly hacky but no way to execute a function at the end
 			// of the promise chain
-			setTimeout(() => {
+			process.nextTick(() => {
 				expect(ctx.calledFn).to.eql('response.json');
+				expect(ctx.calledTarget.statusCode).to.eql(200);
 				expect(ctx.calledWith).to.eql(data);
-			}, 0);
+				done();
+			});
 		});
 	});
 

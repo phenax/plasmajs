@@ -11,7 +11,6 @@ export const Error404=  props => <div>Error</div>;
 
 export const CtrlrPage= props => null;
 
-
 export const getRouter= (url, ctrlr=(()=>{})) => props => (
 	<Router history={new MockHistoryAPI({}, {}, url)} wrapper={Wrapper}>
 
@@ -24,18 +23,17 @@ export const getRouter= (url, ctrlr=(()=>{})) => props => (
 	</Router>
 );
 
-
 export const indexString= '<div><div>Index</div></div>';
 export const aboutString= '<div><div>About</div></div>';
 export const errorString= '<div><div>Error</div></div>';
 
 export const getCtrlrString= name => `<div>${name}</div>`;
 
-
 export const mockCtx= (url) => {
 
 	const ctx= {
 		calledFn: null,
+		calledTarget: null,
 		calledWith: null,
 
 		request: { url },
@@ -43,6 +41,8 @@ export const mockCtx= (url) => {
 		response: new Proxy({}, {
 
 			get: (target, field) => {
+
+				ctx.calledTarget= target;
 
 				ctx.calledFn= `response.${field}`;
 
