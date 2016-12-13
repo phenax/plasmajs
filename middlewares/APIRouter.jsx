@@ -21,7 +21,7 @@ export class APIRoute extends MiddleWare {
 
 		this.hasResponded= true;
 
-		this.props.response.statusCode= 500;
+		this.props.response.statusCode= e.statusCode || 500;
 
 		this.props.response.json(e || {});
 	}

@@ -57,13 +57,17 @@ describe('APIRoute', () => {
 	it('should give an error if the controller sends an error', () => {
 
 		const err= new Error('Some error');
-		const controller= (_, error) => error(err);
+		err.statusCode= 503;
+
+		// Call the error method
+		const controller= (send, error) => error(err);
 
 		renderComponent(component(controller));
 
 		// Should be a 500 server error
-		expect(ctx.calledTarget.statusCode).to.eql(500);
+		expect(ctx.calledTarget.statusCode).to.eql(503);
 
+		// Should send the error as json
 		expect(ctx.calledFn).to.eql('response.json');
 		expect(ctx.calledWith).to.eql(err);
 	});
@@ -106,6 +110,8 @@ describe('APIRoute', () => {
 				done();
 			});
 		});
+
+		// it('should give a')
 	});
 
 });
