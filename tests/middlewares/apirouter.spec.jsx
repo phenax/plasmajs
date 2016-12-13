@@ -74,34 +74,50 @@ describe('APIRoute', () => {
 
 
 	// Tests for controller that return a promise
-	describe('controller that returns a Promise', () => {
+	describe('With controllers that return a Promise', () => {
 
 		const data= { a: 'b' };
+		const err= new Error('Some error');
+
+		let controller, ctrlPromise;
 
 		beforeEach((done) => {
-			
-			const controller= () => {
 
-				return new Promise((resolve, reject) => {
-					setTimeout(() => resolve(data), 50);   // A 50ms delay but thats slow enough
-				})
-				.catch( e => console.error(e) )
-				.then( data => {
-					done();
-					return data;
-				});
+			ctrlPromise= null;
+
+			// Controller that returns a promise
+			controller= () => {
+
+				ctrlPromise= 
+					new Promise((resolve, reject) => {
+						// A 50ms delay. Slow enough
+						setTimeout(() => {
+							resolve(data);
+						}, 50);
+					})
+					.then( data => {
+						done();
+						return data;
+					})
+					.catch( e => {
+						done();
+						return e;
+					});
+
+				return ctrlPromise;
 			};
 
 			// Render the component
 			renderComponent(component(controller));
 		});
 
-		it('should render json resolved by the promise', (done) => {
+		it('should render json that it got from the promise', (done) => {
 
 			// Slightly hacky but no way to execute a function at the end
 			// of the promise chain
 			process.nextTick(() => {
 
+				// Should render json
 				expect(ctx.calledFn).to.eql('response.json');
 				expect(ctx.calledWith).to.eql(data);
 
@@ -110,8 +126,6 @@ describe('APIRoute', () => {
 				done();
 			});
 		});
-
-		// it('should give a')
 	});
 
 });
