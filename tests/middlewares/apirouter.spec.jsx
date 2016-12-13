@@ -8,20 +8,23 @@ import { APIRoute } from '../../middlewares/APIRouter.jsx';
 
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
+
 describe('APIRoute', () => {
 
-	let component;
 	let ctx;
+
+	// API Route component creator
+	const component= 
+			ctrlr => props => 
+				<APIRoute {...ctx} path='/api/test' controller={ctrlr} />;
 
 	beforeEach(() => {
 
+		// Create a new context for /api/test
 		ctx= mockCtx('/api/test');
-
-		component= 
-			ctrlr => props => 
-				<APIRoute {...ctx} path='/api/test' controller={ctrlr} />;
 	});
 
+	// Test to check whether the controller for the api route was called
 	it('should call controller when route is triggered', () => {
 
 		const controller= _ => { controller.hasBeenCalled= true; }
@@ -32,7 +35,7 @@ describe('APIRoute', () => {
 		expect(controller.hasBeenCalled).to.be.true;
 	});
 
-
+	// Test to check whether the apiroute renders json data
 	it('should render json', () => {
 
 		const data= { a: 'b' };
@@ -40,14 +43,18 @@ describe('APIRoute', () => {
 
 		renderComponent(component(controller));
 
+		// The middleware should make a call to response.json
 		expect(ctx.calledFn).to.eql('response.json');
 
-		expect(ctx.calledTarget.statusCode).to.eql(200);
-
+		// response.json should be called with the data
 		expect(ctx.calledWith).to.eql(data);
+
+		// The statusCode of the response should be 200
+		expect(ctx.calledTarget.statusCode).to.eql(200);
 	});
 
 
+	// Tests for controller that return a promise
 	describe('controller that returns a Promise', () => {
 
 		const data= { a: 'b' };
@@ -57,7 +64,7 @@ describe('APIRoute', () => {
 			const controller= () => {
 
 				return new Promise((resolve, reject) => {
-					setTimeout(() => resolve(data), 500);
+					setTimeout(() => resolve(data), 50);   // A 50ms delay but thats slow enough
 				})
 				.catch( e => console.error(e) )
 				.then( data => {
@@ -66,6 +73,7 @@ describe('APIRoute', () => {
 				});
 			};
 
+			// Render the component
 			renderComponent(component(controller));
 		});
 
@@ -74,9 +82,12 @@ describe('APIRoute', () => {
 			// Slightly hacky but no way to execute a function at the end
 			// of the promise chain
 			process.nextTick(() => {
+
 				expect(ctx.calledFn).to.eql('response.json');
-				expect(ctx.calledTarget.statusCode).to.eql(200);
 				expect(ctx.calledWith).to.eql(data);
+
+				expect(ctx.calledTarget.statusCode).to.eql(200);
+
 				done();
 			});
 		});

@@ -70,19 +70,14 @@ export class StaticContentRouter extends MiddleWare {
 				this.terminate();
 			else
 				return false;
-		} catch(e) {
-			return false;
-		}
+
+		} catch(e) { return false; }
 
 		// Stream the file
 		this.props.response
 			.sendFile(fileToFetch, { compress: this._supportedCompression.bind(this) })
-			.then(()=> {
-				console.timeEnd(STATIC_FILE_TIMER);
-			})
-			.catch((e) => {
-				console.log("nada", e);
-			});
+			.then( ()=> console.timeEnd(STATIC_FILE_TIMER) )
+			.catch( (e) => console.error(e) );
 
 		return true;
 	}

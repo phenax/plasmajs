@@ -3,6 +3,8 @@ import React from 'react';
 import { Router, Route } from '../router/server.jsx';
 import { MockHistoryAPI } from '../router/history/MockHistoryAPI.jsx';
 
+
+// Dummy components
 export const Wrapper= props => <div>{props.children}{props.name}</div>;
 
 export const Index=     props => <div>Index</div>;
@@ -11,6 +13,8 @@ export const Error404=  props => <div>Error</div>;
 
 export const CtrlrPage= props => null;
 
+
+// Mock router component creator
 export const getRouter= (url, ctrlr=(()=>{})) => props => (
 	<Router history={new MockHistoryAPI({}, {}, url)} wrapper={Wrapper}>
 
@@ -23,12 +27,16 @@ export const getRouter= (url, ctrlr=(()=>{})) => props => (
 	</Router>
 );
 
+// Expected rendered strings for each routes
 export const indexString= '<div><div>Index</div></div>';
 export const aboutString= '<div><div>About</div></div>';
 export const errorString= '<div><div>Error</div></div>';
 
+// Controller output depends on the name passed in so...
 export const getCtrlrString= name => `<div>${name}</div>`;
 
+
+// Mock context object creator for the http request and response objects
 export const mockCtx= (url) => {
 
 	const ctx= {
