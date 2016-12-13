@@ -54,6 +54,21 @@ describe('APIRoute', () => {
 	});
 
 
+	it('should give an error if the controller sends an error', () => {
+
+		const err= new Error('Some error');
+		const controller= (_, error) => error(err);
+
+		renderComponent(component(controller));
+
+		// Should be a 500 server error
+		expect(ctx.calledTarget.statusCode).to.eql(500);
+
+		expect(ctx.calledFn).to.eql('response.json');
+		expect(ctx.calledWith).to.eql(err);
+	});
+
+
 	// Tests for controller that return a promise
 	describe('controller that returns a Promise', () => {
 
