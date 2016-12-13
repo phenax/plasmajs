@@ -12,7 +12,7 @@ export class MiddleWare extends React.Component {
 		if(this.onRequest)
 			this.onRequest(this.props.request, this.props.response);
 		else
-			throw new Error("Middlewares need an onRequest method defined");
+			throw new Error('Middlewares need an onRequest method defined');
 	}
 
 	terminate() {

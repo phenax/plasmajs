@@ -51,4 +51,17 @@ describe('Custom Middleware', () => {
 		expect(ctx.calledTarget.hasTerminated).to.be.true;
 	});
 
+
+	it('should throw error when there is no onRequest method defined', () => {
+
+		const onReqBackup= MockMiddleWare.prototype.onRequest;
+		MockMiddleWare.prototype.onRequest= null;
+
+		expect(
+			() => renderComponent(() => <MockMiddleWare {...ctx} />)
+		).to.throw(Error);
+
+		MockMiddleWare.prototype.onRequest= onReqBackup;
+	});
+
 });
