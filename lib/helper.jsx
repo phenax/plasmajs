@@ -1,12 +1,10 @@
-// import fs from 'fs';
-// import mime from 'mime';
+
 import React from 'react';
 
 import { renderToStaticMarkup } from 'react-dom/server';
 
 
 export function renderComponent(Element, props={}) {
-
 	return renderToStaticMarkup(<Element {...props} />);
 }
 
@@ -14,7 +12,7 @@ export function renderComponent(Element, props={}) {
 // Render react components(only server-side)
 export function renderTemplate(Element, props) {
 
-	const renderedContent= renderReactComponent(Element, props);
+	const renderedContent= renderComponent(Element, props);
 
 	if(renderedContent == null)
 		return null;
