@@ -65,8 +65,10 @@ export class StaticContentRouter extends MiddleWare {
 
 		try {
 
+			const fileStat= fs.statSync(fileToFetch);
+
 			// Got the file we were looking for
-			if(fs.statSync(fileToFetch).isFile())
+			if(fileStat.isFile())
 				this.terminate();
 			else
 				return false;

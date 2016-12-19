@@ -9,13 +9,13 @@ import { APIRoute } from '../../middlewares/APIRouter.jsx';
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
 
-describe('APIRoute', () => {
+describe('APIRoute Middleware', () => {
 
 	let ctx;
 
 	// API Route component creator
 	const component= 
-			ctrlr => props => 
+			ctrlr => _ => 
 				<APIRoute {...ctx} path='/api/test' controller={ctrlr} />;
 
 	beforeEach(() => {

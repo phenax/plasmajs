@@ -56,6 +56,8 @@ export const mockCtx= (url) => {
 
 				return (data) => {
 					ctx.calledWith= data;
+
+					return Promise.resolve();
 				};
 			}
 		})
