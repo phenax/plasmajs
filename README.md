@@ -27,16 +27,15 @@ An isomorphic NodeJS framework powered with React for building web apps.
 
 ## Guide
 
+### Import it to your app.js
+```javascript
+import {
+  Server, Route, Router, NodeHistoryAPI
+} from 'plasmajs';
+```
+
 ### Writing A Server
 ```javascript
-import React from 'react';
-
-import {
-  Server,
-  Route, Router,
-  NodeHistoryAPI
-} from 'plasmajs';
-
 const HeadLayout=    props => (<head><title>{props.title}</title></head>);
 const WrapperLayout= props => (<body>{props.children}</body>);
 const HomeLayout=    props => (<div>Hello World</div>);
@@ -44,24 +43,18 @@ const ErrorLayout=   props => (<div>404 Not Found</div>);
 
 export default class App extends React.Component {
 
-  static get port() { return 8080; }
+  // Port number (Default=8080)
+  static port= 8080;
 
   render() {
+    const history= new NodeHistoryAPI(this.props.request, this.props.response);
     return (
       <Server>
-
         <HeadLayout title='Test' />
-
-        <Router
-          history={new NodeHistoryAPI(this.props.request, this.props.response)}
-          wrapper={WrapperLayout}>
-
+        <Router history={history} wrapper={WrapperLayout} >
           <Route path='/' component={HomeLayout} />
-
           <Route errorHandler={true} component={ErrorLayout} />
-
         </Router>
-
       </Server>
     );
   }
@@ -140,28 +133,27 @@ Allows you to declare isolated routes for requests to api hooks
 
 import {APIRoute} from 'plasmajs'
 ```javascript
-//...
+  //...
   // API request handler for api routes
-	_apiRequestHandler() {
+  _apiRequestHandler() {
 
     // Return a promise
-		return new Promise((resolve, reject) => {
-			
+    return new Promise((resolve, reject) => {
+		
       resolve({
         wow: "cool cool"
       });
-		});
-	}
+    });
+  }
 
-	render() {
-		return (
-			<Server>
-				<APIRoute {...this.props} method='POST' path='/api/stuff' controller={this._apiRequestHandler} />
-
-				//...
-			</Server>
-		);
-	}
+  render() {
+    return (
+      <Server>
+        <APIRoute {...this.props} method='POST' path='/api/stuff' controller={this._apiRequestHandler} />
+        //...
+      </Server>
+    );
+  }
 ```
 
 - Props
