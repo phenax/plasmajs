@@ -87,6 +87,38 @@ describe('API Resources Router', () => {
 		});
 
 
+		it('should call handle multiple http methods', () => {
+
+			let handerFnWasCalled = false;
+			const handlerFn = () => { handerFnWasCalled = true; };
+
+			let ctx = null;
+
+
+			handerFnWasCalled = false;
+			ctx = mockCtx('/users', { method: 'get' });
+			renderComponent(() =>
+				<Resource {...ctx} name='users' controller={createController({ index: handlerFn })} />);
+
+			expect(handerFnWasCalled).to.be.true;
+
+
+			handerFnWasCalled = false;
+			ctx = mockCtx('/users', { method: 'post' });
+			renderComponent(() =>
+				<Resource {...ctx} name='users' controller={createController({ index: handlerFn })} />);
+
+			expect(handerFnWasCalled).to.be.true;
+
+
+			handerFnWasCalled = false;
+			ctx = mockCtx('/users', { method: 'put' });
+			renderComponent(() =>
+				<Resource {...ctx} name='users' controller={createController({ index: handlerFn })} />);
+
+			expect(handerFnWasCalled).to.be.false;
+		});
+
 	});
 
 
