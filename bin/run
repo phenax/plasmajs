@@ -7,7 +7,7 @@ const path= require('path');
 // 	plugins: [ 'transform-object-rest-spread' ]
 // };
 
-require('babel-register')({
+require('@babel/register')({
 
 	ignore: (name) => {
 
@@ -32,7 +32,7 @@ if(process.argv.length < 3) {
 	process.exit(0);
 }
 
-const fileName= process.argv[2];
+const fileName = process.argv[2];
 
 let App;
 

@@ -39,19 +39,18 @@ Route.propTypes= {
  */
 export class Router extends React.Component {
 
+	_EMPTY_ROUTER = (<Route component={() => null} />);
+
 	constructor(props) {
 		super(props);
 
-		this.state= {
-			currentUrl: '/'
-		};
+		this.state = { currentUrl: '/' };
 
 		this._routes= 
 			this.props.children
 				.filter(
 					comp => 
-						(comp.type === (<Route component={()=>null} />).type)
-				)
+						(comp.type === (this._EMPTY_ROUTER).type))
 				.map( val => val.props );
 
 		if(!(this.props.history instanceof _HnRouteHistoryAPI))
@@ -62,17 +61,12 @@ export class Router extends React.Component {
 	// Life cycle methods only executes on the client-side
 	componentDidMount() {
 
-		this.props.history
-			.routeChangeListener((data)=> {
-
-			this.setState({
-				currentUrl: data.url
-			});
-		});
+		this.props.history.routeChangeListener(data =>
+			this.setState({ currentUrl: data.url })
+		);
 	}
 
 	componentWillUnmount() {
-		
 		this.props.history.removeChangeListener();
 	}
 
@@ -82,7 +76,7 @@ export class Router extends React.Component {
 			return null;
 		}
 
-		const route= this.props.history.matchRoute(this._routes);
+		const route = this.props.history.matchRoute(this._routes);
 
 		if(!route) {
 			throw new Error(DEFAULTERROR);
@@ -94,7 +88,7 @@ export class Router extends React.Component {
 
 
 		// The default props
-		let defaultProps= {
+		let defaultProps = {
 			routerProps: {
 				url: this.state.currentUrl,
 				location: this.props.history.location
@@ -103,33 +97,30 @@ export class Router extends React.Component {
 
 		// Call the router controller
 		if(route.controller) {
-			route.controller(
-				_props => {
-					defaultProps= Object.assign(defaultProps, _props);
-				}
-			);
+			route.controller(_props =>
+				defaultProps = Object.assign(defaultProps, _props));
 		}
 
 
 		// Either render the route component or wrap it in a wrapper and render
-		let $renderComponent= route.$component;
+		let $reactElement = route.$component;
 
 		// If its on the serverside and the wrapper is a function
 		if(this.props.history.response && typeof(this.props.wrapper) === 'function') {
 
-			const Wrapper= this.props.wrapper;
+			const Wrapper = this.props.wrapper;
 
-			$renderComponent= <Wrapper>{route.$component}</Wrapper>;
+			$reactElement = <Wrapper>{route.$component}</Wrapper>;
 		}
 
 		return React.cloneElement(
-			$renderComponent, 
+			$reactElement, 
 			defaultProps
 		);
 	}
 }
 
-Router.propTypes= {
+Router.propTypes = {
 
 	wrapper: React.PropTypes.func,
 
