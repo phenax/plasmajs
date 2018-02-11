@@ -20,7 +20,7 @@ export class Resource extends MiddleWare {
 
 		const Ctrlr = this.props.controller;
 
-		this.props.children.forEach(child => {
+		(this.props.children || []).forEach(child => {
 
 			const action = {
 				url: this.toUrl(child.props.path),
@@ -35,24 +35,21 @@ export class Resource extends MiddleWare {
 			this._actions.push(action);
 		});
 
-		// if(typeof Ctrlr === 'function') {
-		// 	this._controller = new Ctrlr();
-		//
-		// 	Object.getOwnPropertyNames(Ctrlr.prototype)
-		// 		.map(key => this._controller[key])
-		// 		.filter(action => typeof action === 'function')
-		// 		.filter(action => action.isAction)
-		// 		.forEach(action => {
-		//
-		// 			const { actionName, actionMethods } = action;
-		// 			const path = `/${this.props.name}${actionName}`;
-		//
-		// 			this._actions.push({
-		// 				path,
-		// 				methods: actionMethods,
-		// 			});
-		// 		});
-		// }
+		if(typeof Ctrlr === 'function') {
+			this._controller = new Ctrlr();
+
+			Object.getOwnPropertyNames(Ctrlr.prototype)
+				.map(key => this._controller[key])
+				.filter(action => typeof action === 'function')
+				.filter(action => action.isAction)
+				.forEach(action => {
+					this._actions.push({
+						url: this.toUrl(action.actionName),
+						methods: action.actionMethods,
+						handler: action,
+					});
+				});
+		}
 
 
 		this._executeMatchingAction();

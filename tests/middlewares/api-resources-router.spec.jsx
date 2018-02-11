@@ -15,7 +15,7 @@ describe('API Resources Router', () => {
 
 	describe('with simple handler function routing', () => {
 
-		it('should call the correct action in the controller', () => {
+		it('should call the correct handler', () => {
 
 			let handerFnWasCalled = false;
 			const handlerFn = () => { handerFnWasCalled = true; };
@@ -33,7 +33,7 @@ describe('API Resources Router', () => {
 		});
 
 
-		it('should not match when method is incorrect', () => {
+		it('should not match when http method is incorrect', () => {
 
 			let handerFnWasCalled = false;
 			const handlerFn = () => { handerFnWasCalled = true; };
@@ -67,6 +67,26 @@ describe('API Resources Router', () => {
 
 			expect(handerFnWasCalled).to.be.false;
 		});
+	});
+
+
+	describe('with controller class', () => {
+
+		it('should call the correct decorated action in the controller', () => {
+
+			let handerFnWasCalled = false;
+			const handlerFn = () => { handerFnWasCalled = true; };
+
+			const ctx = mockCtx('/users', { method: 'get' });
+
+			renderComponent(() =>
+				<Resource {...ctx} name='users' controller={createController({ index: handlerFn })} />
+			);
+
+			expect(handerFnWasCalled).to.be.true;
+		});
+
+
 	});
 
 
