@@ -20,7 +20,7 @@ describe('API Resources Router', () => {
 			let handerFnWasCalled = false;
 			const handlerFn = () => { handerFnWasCalled = true; console.log('---------------------------'); }
 
-			const ctx = mockCtx('/posts', { method: 'post' });
+			const ctx = mockCtx('/posts', { method: 'get' });
 
 			renderComponent(() =>
 				<Resource {...ctx} name='posts'>

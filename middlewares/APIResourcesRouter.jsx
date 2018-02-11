@@ -24,7 +24,7 @@ export class Resource extends MiddleWare {
 
 			const action = {
 				url: this.toUrl(child.props.path),
-				methods: [ child.props.path.toLowerCase() ],
+				methods: [ child.props.method.toLowerCase() ],
 				handler: child.props.handler,
 			};
 
@@ -65,9 +65,6 @@ export class Resource extends MiddleWare {
 			const action = this._actions[i];
 
 			for(let j = 0; j < action.methods.length; j++) {
-
-				console.log(action.url, this.props.request.url,
-					this.props.request.method, action.methods[j]);
 
 				const isAMatch = checkUrlMatch(
 					action.url, this.props.request.url,
