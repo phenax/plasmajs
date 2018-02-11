@@ -18,7 +18,7 @@ describe('API Resources Router', () => {
 		it('should call the correct action in the controller', () => {
 
 			let handerFnWasCalled = false;
-			const handlerFn = () => { handerFnWasCalled = true; }
+			const handlerFn = () => { handerFnWasCalled = true; };
 
 			const ctx = mockCtx('/users', { method: 'get' });
 
@@ -36,7 +36,7 @@ describe('API Resources Router', () => {
 		it('should not match when method is incorrect', () => {
 
 			let handerFnWasCalled = false;
-			const handlerFn = () => { handerFnWasCalled = true; }
+			const handlerFn = () => { handerFnWasCalled = true; };
 
 			const ctx = mockCtx('/users/add', { method: 'get' });
 
@@ -51,22 +51,22 @@ describe('API Resources Router', () => {
 		});
 
 
-		// it('should call nothing when nothing matches', () => {
+		it('should call nothing when nothing matches', () => {
 
-		// 	let handerFnWasCalled = false;
-		// 	const handlerFn = () => { handerFnWasCalled = true; console.log('---------------------------'); }
+			let handerFnWasCalled = false;
+			const handlerFn = () => { handerFnWasCalled = true; };
 
-		// 	const ctx = mockCtx('/posts', { method: 'get' });
+			const ctx = mockCtx('/uk09kse', { method: 'get' });
 
-		// 	renderComponent(() =>
-		// 		<Resource {...ctx} name='posts'>
-		// 			<Action path='/' method='GET' handler={handlerFn} />
-		// 			<Action path='/something-else' method='GET' handler={() => null} />
-		// 		</Resource>
-		// 	);
+			renderComponent(() =>
+				<Resource {...ctx} name='posts'>
+					<Action path='/' method='GET' handler={handlerFn} />
+					<Action path='/something-else' method='GET' handler={() => null} />
+				</Resource>
+			);
 
-		// 	expect(handerFnWasCalled).to.be.true;
-		// });
+			expect(handerFnWasCalled).to.be.false;
+		});
 	});
 
 
