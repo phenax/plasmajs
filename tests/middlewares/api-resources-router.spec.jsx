@@ -5,6 +5,7 @@ import React from 'react';
 import {expect} from 'chai';
 
 import { renderComponent } from '../../lib/helper.jsx';
+
 import { Resource, Action } from '../../middlewares/APIResourcesRouter.jsx';
 
 import { mockCtx, createController } from '../../lib/testHelpers.jsx';
