@@ -38,17 +38,13 @@ export const getCtrlrString= name => `<div>${name}</div>`;
 
 
 
-export class PostsTestController {
+export const createController = (obj = {}) => class {
 
 	@action('get', '/')
-	index() {
-
-	}
+	index(...props) { obj.index && obj.index(...props); }
 
 	@action('post', '/add')
-	add() {
-
-	}
+	add() { obj.add && obj.add(...props); }
 }
 
 
