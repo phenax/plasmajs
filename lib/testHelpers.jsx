@@ -38,7 +38,7 @@ export const getCtrlrString= name => `<div>${name}</div>`;
 
 
 
-export const createController = (obj = {}) => class {
+export const createController = (obj = {}) => class _Controller {
 
 	@action('get', '/')
 	index(...props) { obj.index && obj.index(...props); }

@@ -1,7 +1,7 @@
 
 import {expect} from 'chai';
 
-import { checkUrlMatch } from '../../lib/helper.jsx';
+import { checkUrlMatch, toUrlToken } from '../../lib/helper.jsx';
 
 
 describe('URL Matching', () => {
@@ -25,5 +25,12 @@ describe('URL Matching', () => {
 
 		expect(checkUrlMatch('/hello', '/hello', 'GET', 'POST')).to.be.false;
 		expect(checkUrlMatch(/^\/hello$/, '/hello', 'GET', 'POST')).to.be.false;
+	});
+
+
+	it('should tokenize url correctly', () => {
+
+		expect(toUrlToken('/users/add')).to.be.eql('users.add');
+		expect(toUrlToken('/us3clj be-rs/a-232wasd svdd')).to.be.eql('us3clj-be-rs.a-232wasd-svdd');
 	});
 });

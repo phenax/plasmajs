@@ -43,6 +43,9 @@ export function checkUrlMatch(url, reqUrl, method1='GET', method2='GET') {
 }
 
 
+export const trimAndReplaceChar = (str, char, replacementChar) =>
+	str.split(char).filter(f => f).join(replacementChar);
+
 export const toUrlToken = url =>
-	url.split('/').filter(f => f).join('.');
+	trimAndReplaceChar(trimAndReplaceChar(url, '/', '.'), ' ', '-');
 
