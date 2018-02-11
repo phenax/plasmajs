@@ -2,6 +2,7 @@
 import React from 'react';
 import { Router, Route } from '../router/server.jsx';
 import { MockHistoryAPI } from '../router/history/MockHistoryAPI.jsx';
+import { action } from '../middlewares/APIResourcesRouter';
 
 
 // Dummy components
@@ -36,27 +37,37 @@ export const errorString= '<div><div>Error</div></div>';
 export const getCtrlrString= name => `<div>${name}</div>`;
 
 
-// Mock context object creator for the http request and response objects
-export const mockCtx= (url) => {
 
-	const ctx= {
+export const createController = (obj = {}) => class _Controller {
+
+	@action([ 'get', 'post' ], '/')
+	index(...props) { obj.index && obj.index(...props); }
+
+	@action('post', '/add')
+	add() { obj.add && obj.add(...props); }
+}
+
+
+// Mock context object creator for the http request and response objects
+export const mockCtx = (url, requestStuff) => {
+
+	const ctx = {
 		calledFn: null,
 		calledTarget: null,
 		calledWith: null,
 
-		request: { url },
+		request: { url, ...requestStuff },
 
 		response: new Proxy({}, {
 
 			get: (target, field) => {
 
-				ctx.calledTarget= target;
+				ctx.calledTarget = target;
 
-				ctx.calledFn= `response.${field}`;
+				ctx.calledFn = `response.${field}`;
 
 				return (data) => {
-					ctx.calledWith= data;
-
+					ctx.calledWith = data;
 					return Promise.resolve();
 				};
 			}

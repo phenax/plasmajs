@@ -27,23 +27,25 @@ export function renderTemplate(Element, props) {
 // Route matching
 export function checkUrlMatch(url, reqUrl, method1='GET', method2='GET') {
 
-	let isAMatch= false;
+	let isAMatch = false;
 
-	if(typeof(url.test) === 'function') {
-
-		isAMatch= url.test(reqUrl);
-
-	} else if(typeof(url) === 'string') {
-
-		isAMatch= url === reqUrl;
-
+	if(typeof url.test === 'function') {
+		isAMatch = url.test(reqUrl);
+	} else if(typeof url === 'string') {
+		isAMatch = toUrlToken(url) === toUrlToken(reqUrl);
 	}
 
 	// Does the method name match?
-	if(isAMatch) {
-		if(method1.toLowerCase() !== method2.toLowerCase())
-			isAMatch= false;
-	}
+	if(isAMatch && method1.toLowerCase() !== method2.toLowerCase())
+		isAMatch = false;
 
 	return isAMatch;
 }
+
+
+export const trimAndReplaceChar = (str, char, replacementChar) =>
+	str.split(char).filter(f => f).join(replacementChar);
+
+export const toUrlToken = url =>
+	trimAndReplaceChar(trimAndReplaceChar(url, '/', '.'), ' ', '-');
+
