@@ -104,6 +104,12 @@ export class Action extends React.Component {
 	}
 }
 
+Action.propTypes = {
+	path: React.PropTypes.string.isRequired,
+	method: React.PropTypes.string,
+	// handler: React.PropTypes.object, string or function
+}
+
 
 /**
  *
