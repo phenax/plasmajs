@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { MiddleWare } from '../MiddleWare.jsx';
 
@@ -105,8 +106,8 @@ export class Action extends React.Component {
 }
 
 Action.propTypes = {
-	path: React.PropTypes.string.isRequired,
-	method: React.PropTypes.string,
+	path: PropTypes.string.isRequired,
+	method: PropTypes.string,
 	// handler: React.PropTypes.object, string or function
 }
 

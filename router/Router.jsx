@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import _HnRouteHistoryAPI from './history/_HnRouteHistoryAPI.jsx';
 
@@ -19,17 +20,17 @@ export class Route extends React.Component {
 
 Route.propTypes= {
 
-	caseInsensitive: React.PropTypes.bool,
+	caseInsensitive: PropTypes.bool,
 
-	statusCode: React.PropTypes.number,
+	statusCode: PropTypes.number,
 
-	errorHandler: React.PropTypes.bool,
+	errorHandler: PropTypes.bool,
 
-	controller: React.PropTypes.func,
+	controller: PropTypes.func,
 
-	method: React.PropTypes.string,
+	method: PropTypes.string,
 
-	component: React.PropTypes.func.isRequired
+	component: PropTypes.func.isRequired
 };
 
 
@@ -122,7 +123,7 @@ export class Router extends React.Component {
 
 Router.propTypes = {
 
-	wrapper: React.PropTypes.func,
+	wrapper: PropTypes.func,
 
-	history: React.PropTypes.object.isRequired
+	history: PropTypes.object.isRequired
 };

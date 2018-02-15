@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { triggerUpdate, routerConfig } from '../history/events.jsx';
 
@@ -75,7 +76,7 @@ export class Link extends React.Component {
 }
 
 Link.propTypes= {
-	to: React.PropTypes.string,
-	href: React.PropTypes.string,
-	state: React.PropTypes.object
+	to: PropTypes.string,
+	href: PropTypes.string,
+	state: PropTypes.object
 };
