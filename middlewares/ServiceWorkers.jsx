@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { MiddleWare } from '../MiddleWare.jsx';
 
@@ -55,11 +56,9 @@ export class ServiceWorker extends MiddleWare {
 }
 
 ServiceWorker.propTypes= {
-
-	path: React.PropTypes.string,
-
-	success: React.PropTypes.func,
-	error: React.PropTypes.func,
+	path: PropTypes.string,
+	success: PropTypes.func,
+	error: PropTypes.func,
 };
 
 

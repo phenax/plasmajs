@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { MiddleWare } from '../MiddleWare.jsx';
 
@@ -60,5 +61,5 @@ export class APIRoute extends MiddleWare {
 
 APIRoute.propTypes = {
 
-	controller: React.PropTypes.func.isRequired,
+	controller: PropTypes.func.isRequired,
 };

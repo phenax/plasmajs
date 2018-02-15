@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { MiddleWare } from '../MiddleWare.jsx';
 
@@ -102,6 +103,12 @@ export class Action extends React.Component {
 	render() {
 		return null;
 	}
+}
+
+Action.propTypes = {
+	path: PropTypes.string.isRequired,
+	method: PropTypes.string,
+	// handler: React.PropTypes.object, string or function
 }
 
 

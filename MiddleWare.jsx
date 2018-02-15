@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // Super class for creating middlewares
 export class MiddleWare extends React.Component {
@@ -25,6 +26,6 @@ export class MiddleWare extends React.Component {
 }
 
 MiddleWare.propTypes = {
-	request: React.PropTypes.object.isRequired,
-	response: React.PropTypes.object.isRequired
+	request: PropTypes.object.isRequired,
+	response: PropTypes.object.isRequired
 }
