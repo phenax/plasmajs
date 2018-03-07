@@ -1,0 +1,1 @@
+{ "env": { "mocha": true } }

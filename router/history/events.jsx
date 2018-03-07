@@ -1,46 +1,36 @@
+import filter from "lodash/filter";
+import forEach from "lodash/forEach";
+import isFunction from "lodash/isFunction";
 
-const handlers= {};
+const handlers = new Map();
 
-export const routerConfig= {
-	type: 'push'
+export const routerConfig = {
+  type: "push"
 };
 
 /**
  * Trigger update i.e. execute all handlers
  */
 export function triggerUpdate() {
-
-	for(let key in handlers) {
-
-		if(!(handlers[key] && handlers[key].handler))
-			continue;
-
-		handlers[key].handler();
-	}
-};
-
+  forEach(filter(handlers.values(), handler => isFunction(handler)), handler =>
+    handler()
+  );
+}
 
 /**
  * Add an update handler
  */
 export function addRouteChangeListener(id, callback) {
+  if (handlers.has(id)) return false;
 
-	if(handlers[id])
-		return false;
+  handlers.set(id, callback);
 
-	handlers[id]= {
-		handler: callback
-	};
-
-	return true;
+  return true;
 }
-
-
 
 /**
  * Remove an update handler
  */
 export function removeRouteChangeListener(id) {
-	
-	delete handlers[id];
+  handlers.delete(id);
 }

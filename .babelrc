@@ -1,8 +1,13 @@
 {
-	presets: [
-		"@babel/preset-es2015",
-		"@babel/preset-es2016",
-		"@babel/preset-stage-0",
-		"@babel/preset-react"
-	]
+  "env": {
+    "test": {
+      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx"] }]]
+    }
+  },
+  "presets": [
+    "@babel/preset-es2015",
+    "@babel/preset-es2016",
+    "@babel/preset-stage-0",
+    "@babel/preset-react"
+  ]
 }
