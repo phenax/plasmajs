@@ -1,13 +1,14 @@
 {
   "env": {
     "test": {
-      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx"] }]]
+      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx", "lib/*.jsx"] }]]
     }
   },
   "presets": [
     "@babel/preset-es2015",
     "@babel/preset-es2016",
     "@babel/preset-stage-0",
+    "@babel/preset-flow",
     "@babel/preset-react"
   ]
 }
