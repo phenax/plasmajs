@@ -35,7 +35,9 @@ describe('Router', () => {
         expect(child.type).to.eql(<Route component={noop} />.type);
       });
     });
-
+    it('should be able to unmount without throwing errors', () => {
+      expect(router.componentWillUnmount).not.to.throw;
+    });
     it('should have all the routes configured correctly', () => {
       forEach(router.props.children, child => {
         expect(child.props.component).to.exist;

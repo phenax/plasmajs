@@ -10,7 +10,6 @@ import noop from 'lodash/noop';
 
 import { expect } from 'chai';
 
-import http from 'http';
 // import nock from 'nock';
 
 import { Router, Route } from '../../../router/server';
@@ -34,7 +33,7 @@ export const Error404 = () => <div>Error</div>;
 export const CtrlrPage = () => constant(null);
 
 const router = (
-  <Router history={new NodeHistoryAPI(http.req, http.res)}>
+  <Router history={new NodeHistoryAPI(null, null)}>
     <Route path="/" component={Index} />
     <Route path={/^\/about$/} component={About} />
 
@@ -46,7 +45,7 @@ const router = (
 describe('Router', () => {
   describe('Node History API', () => {
     it('can be created', () => {
-      const history = new NodeHistoryAPI(http.req, http.res);
+      const history = new NodeHistoryAPI(null, null);
       expect(history).to.be.an.instanceof(NodeHistoryAPI);
     });
   });

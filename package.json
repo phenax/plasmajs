@@ -8,7 +8,7 @@
     "coverage":
       "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha ./**/*.spec.jsx --require @babel/register",
     "precommit": "lint-staged",
-    "prepush": "lint-staged",
+    "prepush": "npm run coverage && lint-staged",
     "test":
       "cross-env NODE_ENV=test mocha ./**/*.spec.jsx --require @babel/register",
     "test:w":
@@ -50,8 +50,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0-beta.40",
-    "@babel/preset-es2015": "^7.0.0-beta.40",
-    "@babel/preset-es2016": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-flow": "7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
     "@babel/preset-stage-0": "^7.0.0-beta.40",
@@ -71,7 +70,7 @@
     "lines": 75,
     "statements": 75,
     "functions": 75,
-    "branches": 75,
+    "branches": 50,
     "sourceMap": false,
     "instrument": false
   }
