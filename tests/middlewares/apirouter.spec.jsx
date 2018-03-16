@@ -1,131 +1,117 @@
-
 import React from 'react';
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import { renderComponent } from '../../lib/helper.jsx';
 import { APIRoute } from '../../middlewares/APIRouter.jsx';
 
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
-
 describe('APIRoute Middleware', () => {
+  let ctx;
 
-	let ctx;
+  // API Route component creator
+  const component = ctrlr => () => (
+    <APIRoute {...ctx} path="/api/test" controller={ctrlr} />
+  );
 
-	// API Route component creator
-	const component= 
-			ctrlr => _ => 
-				<APIRoute {...ctx} path='/api/test' controller={ctrlr} />;
+  beforeEach(() => {
+    // Create a new context for /api/test
+    ctx = mockCtx('/api/test');
+  });
 
-	beforeEach(() => {
+  // Test to check whether the controller for the api route was called
+  it('should call controller when route is triggered', () => {
+    const controller = () => {
+      controller.hasBeenCalled = true;
+    };
+    controller.hasBeenCalled = false;
 
-		// Create a new context for /api/test
-		ctx= mockCtx('/api/test');
-	});
+    renderComponent(component(controller));
 
-	// Test to check whether the controller for the api route was called
-	it('should call controller when route is triggered', () => {
+    expect(controller.hasBeenCalled).to.be.true;
+  });
 
-		const controller= _ => { controller.hasBeenCalled= true; }
-		controller.hasBeenCalled= false;
+  // Test to check whether the apiroute renders json data
+  it('should render json', () => {
+    const data = { a: 'b' };
+    const controller = send => send(data);
 
-		renderComponent(component(controller));
+    renderComponent(component(controller));
 
-		expect(controller.hasBeenCalled).to.be.true;
-	});
+    // The middleware should make a call to response.json
+    expect(ctx.calledFn).to.eql('response.json');
 
-	// Test to check whether the apiroute renders json data
-	it('should render json', () => {
+    // response.json should be called with the data
+    expect(ctx.calledWith).to.eql(data);
 
-		const data= { a: 'b' };
-		const controller= send => send(data);
+    // The statusCode of the response should be 200
+    expect(ctx.calledTarget.statusCode).to.eql(200);
+  });
 
-		renderComponent(component(controller));
+  it('should give an error if the controller sends an error', () => {
+    const err = new Error('Some error');
+    err.statusCode = 503;
 
-		// The middleware should make a call to response.json
-		expect(ctx.calledFn).to.eql('response.json');
+    // Call the error method
+    const controller = (send, error) => error(err);
 
-		// response.json should be called with the data
-		expect(ctx.calledWith).to.eql(data);
+    renderComponent(component(controller));
 
-		// The statusCode of the response should be 200
-		expect(ctx.calledTarget.statusCode).to.eql(200);
-	});
+    // Should be a 500 server error
+    expect(ctx.calledTarget.statusCode).to.eql(503);
 
+    // Should send the error as json
+    expect(ctx.calledFn).to.eql('response.json');
+    expect(ctx.calledWith).to.eql(err);
+  });
 
-	it('should give an error if the controller sends an error', () => {
+  // Tests for controller that return a promise
+  describe('With controllers that return a Promise', () => {
+    const data = { a: 'b' };
+    const err = new Error('Some error');
 
-		const err= new Error('Some error');
-		err.statusCode= 503;
+    let controller, ctrlPromise;
 
-		// Call the error method
-		const controller= (send, error) => error(err);
+    beforeEach(done => {
+      ctrlPromise = null;
 
-		renderComponent(component(controller));
+      // Controller that returns a promise
+      controller = () => {
+        ctrlPromise = new Promise((resolve, reject) => {
+          // A 50ms delay. Slow enough
+          setTimeout(() => {
+            resolve(data);
+          }, 50);
+        })
+          .then(data => {
+            done();
+            return data;
+          })
+          .catch(e => {
+            done();
+            return e;
+          });
 
-		// Should be a 500 server error
-		expect(ctx.calledTarget.statusCode).to.eql(503);
+        return ctrlPromise;
+      };
 
-		// Should send the error as json
-		expect(ctx.calledFn).to.eql('response.json');
-		expect(ctx.calledWith).to.eql(err);
-	});
+      // Render the component
+      renderComponent(component(controller));
+    });
 
+    it('should render json that it got from the promise', done => {
+      // Slightly hacky but no way to execute a function at the end
+      // of the promise chain
+      process.nextTick(() => {
+        // Should render json
+        expect(ctx.calledFn).to.eql('response.json');
+        expect(ctx.calledWith).to.eql(data);
 
-	// Tests for controller that return a promise
-	describe('With controllers that return a Promise', () => {
+        expect(ctx.calledTarget.statusCode).to.eql(200);
 
-		const data= { a: 'b' };
-		const err= new Error('Some error');
-
-		let controller, ctrlPromise;
-
-		beforeEach((done) => {
-
-			ctrlPromise= null;
-
-			// Controller that returns a promise
-			controller= () => {
-
-				ctrlPromise= 
-					new Promise((resolve, reject) => {
-						// A 50ms delay. Slow enough
-						setTimeout(() => {
-							resolve(data);
-						}, 50);
-					})
-					.then( data => {
-						done();
-						return data;
-					})
-					.catch( e => {
-						done();
-						return e;
-					});
-
-				return ctrlPromise;
-			};
-
-			// Render the component
-			renderComponent(component(controller));
-		});
-
-		it('should render json that it got from the promise', (done) => {
-
-			// Slightly hacky but no way to execute a function at the end
-			// of the promise chain
-			process.nextTick(() => {
-
-				// Should render json
-				expect(ctx.calledFn).to.eql('response.json');
-				expect(ctx.calledWith).to.eql(data);
-
-				expect(ctx.calledTarget.statusCode).to.eql(200);
-
-				done();
-			});
-		});
-	});
-
+        done();
+      });
+    });
+  });
 });

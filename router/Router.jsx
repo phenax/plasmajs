@@ -1,129 +1,110 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import _HnRouteHistoryAPI from './history/_HnRouteHistoryAPI.jsx';
 
+import assign from 'lodash/assign';
+import constant from 'lodash/constant';
+import filter from 'lodash/filter';
+import isFunction from 'lodash/isFunction';
+import map from 'lodash/map';
+
 // Error components
-const DEFAULTERROR= 'Something went wrong';
-const NULLCOMPONENTERROR= 'The component cannot be null';
-const HISTORYTYPEERROR= 'The prop `history` has to be an instance of either HistoryAPI or NodeHistoryAPI';
-
-
+const DEFAULTERROR = 'Something went wrong';
+const NULLCOMPONENTERROR = 'The component cannot be null';
+const HISTORYTYPEERROR =
+  'The prop `history` has to be an instance of either HistoryAPI or NodeHistoryAPI';
 
 /**
  * Route declaration component
  */
 export class Route extends React.Component {
-	render() { return null; }
+  static propTypes = {
+    caseInsensitive: PropTypes.bool,
+    statusCode: PropTypes.number,
+    errorHandler: PropTypes.bool,
+    controller: PropTypes.func,
+    method: PropTypes.string,
+    component: PropTypes.func.isRequired,
+  };
+  render = constant(null);
 }
-
-Route.propTypes= {
-
-	caseInsensitive: PropTypes.bool,
-
-	statusCode: PropTypes.number,
-
-	errorHandler: PropTypes.bool,
-
-	controller: PropTypes.func,
-
-	method: PropTypes.string,
-
-	component: PropTypes.func.isRequired
-};
-
-
 
 /**
  * Router wrapper
  */
 export class Router extends React.Component {
+  static propTypes = {
+    wrapper: PropTypes.func,
+    children: PropTypes.node,
+    history: PropTypes.object.isRequired,
+  };
 
-	_EMPTY_ROUTER = (<Route component={() => null} />);
+  _EMPTY_ROUTER = <Route component={constant(null)} />;
 
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = { currentUrl: '/' };
+    this.state = { currentUrl: '/' };
 
-		this._routes= 
-			this.props.children
-				.filter(
-					comp => 
-						(comp.type === (this._EMPTY_ROUTER).type))
-				.map( val => val.props );
+    this._routes = map(
+      filter(this.props.children, { type: this._EMPTY_ROUTER.type }),
+      'props',
+    );
 
-		if(!(this.props.history instanceof _HnRouteHistoryAPI))
-			throw new Error(HISTORYTYPEERROR);
-	}
+    if (!(this.props.history instanceof _HnRouteHistoryAPI))
+      throw new Error(HISTORYTYPEERROR);
+  }
 
+  // Life cycle methods only executes on the client-side
+  componentDidMount() {
+    this.props.history.routeChangeListener(data =>
+      this.setState({ currentUrl: data.url }),
+    );
+  }
 
-	// Life cycle methods only executes on the client-side
-	componentDidMount() {
+  componentWillUnmount() {
+    this.props.history.removeChangeListener();
+  }
 
-		this.props.history.routeChangeListener(data =>
-			this.setState({ currentUrl: data.url })
-		);
-	}
+  render() {
+    const { props: { history, wrapper } } = this;
+    if (history.response && history.response.hasTerminated) {
+      return null;
+    }
 
-	componentWillUnmount() {
-		this.props.history.removeChangeListener();
-	}
+    const route = history.matchRoute(this._routes);
 
-	render() {
+    if (!route) {
+      throw new Error(DEFAULTERROR);
+    }
 
-		if(this.props.history.response && this.props.history.response.hasTerminated) {
-			return null;
-		}
+    if (!route.$component) {
+      throw new Error(NULLCOMPONENTERROR);
+    }
 
-		const route = this.props.history.matchRoute(this._routes);
+    // The default props
+    let defaultProps = {
+      routerProps: {
+        url: this.state.currentUrl,
+        location: history.location,
+      },
+    };
 
-		if(!route) {
-			throw new Error(DEFAULTERROR);
-		}
+    // Call the router controller
+    if (route.controller) {
+      route.controller(_props => (defaultProps = assign(defaultProps, _props)));
+    }
 
-		if(!route.$component) {
-			throw new Error(NULLCOMPONENTERROR);
-		}
+    // Either render the route component or wrap it in a wrapper and render
+    let $reactElement = route.$component;
 
+    // If it's on the serverside and the wrapper is a function
+    if (history.response && isFunction(wrapper)) {
+      const Wrapper = wrapper;
+      $reactElement = <Wrapper>{route.$component}</Wrapper>;
+    }
 
-		// The default props
-		let defaultProps = {
-			routerProps: {
-				url: this.state.currentUrl,
-				location: this.props.history.location
-			}
-		};
-
-		// Call the router controller
-		if(route.controller) {
-			route.controller(_props =>
-				defaultProps = Object.assign(defaultProps, _props));
-		}
-
-
-		// Either render the route component or wrap it in a wrapper and render
-		let $reactElement = route.$component;
-
-		// If its on the serverside and the wrapper is a function
-		if(this.props.history.response && typeof(this.props.wrapper) === 'function') {
-
-			const Wrapper = this.props.wrapper;
-
-			$reactElement = <Wrapper>{route.$component}</Wrapper>;
-		}
-
-		return React.cloneElement(
-			$reactElement, 
-			defaultProps
-		);
-	}
+    return React.cloneElement($reactElement, defaultProps);
+  }
 }
-
-Router.propTypes = {
-
-	wrapper: PropTypes.func,
-
-	history: PropTypes.object.isRequired
-};

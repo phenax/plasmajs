@@ -1,7 +1,6 @@
-
 import React from 'react';
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import { MiddleWare } from '../../MiddleWare.jsx';
 
@@ -9,59 +8,48 @@ import { renderComponent } from '../../lib/helper.jsx';
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
 describe('Custom Middleware', () => {
+  let wasCalled;
 
-	let wasCalled;
+  let callback;
 
-	let callback;
+  let ctx;
 
-	let ctx;
+  class MockMiddleWare extends MiddleWare {
+    onRequest(req, res) {
+      wasCalled = true;
+      this.res = res;
+      if (callback) callback(() => this.terminate());
+    }
+  }
 
-	class MockMiddleWare extends MiddleWare {
+  beforeEach(() => {
+    wasCalled = false;
 
-		onRequest(req, res) {
+    ctx = mockCtx();
+  });
 
-			wasCalled= true;
+  it('should call the onRequest method when rendered', () => {
+    renderComponent(() => <MockMiddleWare {...ctx} />);
 
-			if(callback)
-				callback(() => this.terminate());
-		}
-	}
+    expect(wasCalled).to.be.true;
+  });
 
-	beforeEach(() => {
+  it('should terminate when .terminate is called', () => {
+    callback = terminate => terminate();
 
-		wasCalled= false;
+    renderComponent(() => <MockMiddleWare {...ctx} />);
 
-		ctx= mockCtx();
-	});
+    expect(ctx.calledTarget.hasTerminated).to.be.true;
+  });
 
+  it('should throw error when there is no onRequest method defined', () => {
+    const onReqBackup = MockMiddleWare.prototype.onRequest;
+    MockMiddleWare.prototype.onRequest = null;
 
-	it('should call the onRequest method when rendered', () => {
-		renderComponent(() => <MockMiddleWare {...ctx} />);
+    expect(() => renderComponent(() => <MockMiddleWare {...ctx} />)).to.throw(
+      Error,
+    );
 
-		expect(wasCalled).to.be.true;
-	});
-
-
-	it('should terminate when .terminate is called', () => {
-
-		callback= terminate => terminate();
-
-		renderComponent(() => <MockMiddleWare {...ctx} />);
-
-		expect(ctx.calledTarget.hasTerminated).to.be.true;
-	});
-
-
-	it('should throw error when there is no onRequest method defined', () => {
-
-		const onReqBackup= MockMiddleWare.prototype.onRequest;
-		MockMiddleWare.prototype.onRequest= null;
-
-		expect(
-			() => renderComponent(() => <MockMiddleWare {...ctx} />)
-		).to.throw(Error);
-
-		MockMiddleWare.prototype.onRequest= onReqBackup;
-	});
-
+    MockMiddleWare.prototype.onRequest = onReqBackup;
+  });
 });

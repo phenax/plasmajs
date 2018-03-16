@@ -4,8 +4,16 @@
   "description": "Isomorphic nodeJS framework powered with react",
   "main": "app.jsx",
   "scripts": {
-    "test": "mocha ./**/*.spec.jsx --compilers jsx:@babel/register",
-    "test:w": "mocha --watch ./**/*.spec.jsx --compilers jsx:@babel/register"
+    "check": "flow check",
+    "coverage":
+      "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha ./**/*.spec.jsx --require @babel/register",
+    "precommit": "lint-staged",
+    "prepush": "npm run coverage && lint-staged",
+    "test":
+      "cross-env NODE_ENV=test mocha ./**/*.spec.jsx --require @babel/register",
+    "test:w":
+      "cross-env NODE_ENV=test mocha --watch ./**/*.spec.jsx --require @babel/register",
+    "types": "flow-typed install"
   },
   "bin": {
     "plasmajs": "./bin/run"
@@ -14,30 +22,56 @@
     "type": "git",
     "url": "https://github.com/phenax/plasmajs.git"
   },
-  "keywords": [
-    "react",
-    "plasma",
-    "nodejs",
-    "framework"
-  ],
+  "keywords": ["react", "plasma", "nodejs", "framework"],
   "author": "Akshay Nair <phenax5@gmail.com>",
+  "contributors": ["Jonathan Sifuentes <jayands2k11@ymail.com>"],
   "license": "Apache-2.0",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^3.8.1",
-    "eslint-plugin-react": "^6.4.1",
-    "mocha": "^3.2.0"
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-istanbul": "^4.1.5",
+    "chai": "^4.1.2",
+    "cross-env": "^5.1.3",
+    "eslint": "^4.18.2",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-flowtype": "^2.46.1",
+    "eslint-plugin-lodash": "^2.6.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.7.0",
+    "flow-bin": "^0.66.0",
+    "flow-typed": "^2.3.0",
+    "husky": "^0.14.3",
+    "istanbul": "^0.4.5",
+    "lint-staged": "^7.0.0",
+    "mocha": "^5.0.2",
+    "nock": "^9.2.3",
+    "nyc": "^11.4.1",
+    "prettier": "^1.11.1",
+    "prettier-eslint": "^8.8.1"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0-beta.39",
-    "@babel/preset-es2015": "^7.0.0-beta.39",
-    "@babel/preset-es2016": "^7.0.0-beta.39",
-    "@babel/preset-react": "^7.0.0-beta.39",
-    "@babel/preset-stage-0": "^7.0.0-beta.39",
-    "@babel/register": "^7.0.0-beta.39",
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-flow": "7.0.0-beta.40",
+    "@babel/preset-react": "^7.0.0-beta.40",
+    "@babel/preset-stage-0": "^7.0.0-beta.40",
+    "@babel/register": "^7.0.0-beta.40",
+    "lodash": "^4.17.5",
     "mime": "^1.3.4",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,json}": ["prettier --write", "git add"]
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 75,
+    "statements": 75,
+    "functions": 75,
+    "branches": 50,
+    "sourceMap": false,
+    "instrument": false
   }
 }

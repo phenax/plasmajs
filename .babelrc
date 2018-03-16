@@ -1,8 +1,22 @@
 {
-	presets: [
-		"@babel/preset-es2015",
-		"@babel/preset-es2016",
-		"@babel/preset-stage-0",
-		"@babel/preset-react"
-	]
+  "env": {
+    "test": {
+      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx", "lib/*.jsx"] }]]
+    }
+  },
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": ["last 2 versions", "safari >= 7"],
+          "node": "current"
+        },
+        "useBuiltIns": false
+      }
+    ],
+    "@babel/preset-stage-0",
+    "@babel/preset-flow",
+    "@babel/preset-react"
+  ]
 }

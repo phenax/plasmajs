@@ -1,46 +1,50 @@
+// @flow
+import clone from 'lodash/clone';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import isFunction from 'lodash/isFunction';
 
-const handlers= {};
+const handlers: Map<string, Function> = new Map();
 
-export const routerConfig= {
-	type: 'push'
+export const routerConfig = {
+  type: 'push',
 };
 
 /**
  * Trigger update i.e. execute all handlers
  */
 export function triggerUpdate() {
-
-	for(let key in handlers) {
-
-		if(!(handlers[key] && handlers[key].handler))
-			continue;
-
-		handlers[key].handler();
-	}
-};
-
+  return map(filter(Array.from(handlers.values()), isFunction), handler =>
+    handler(),
+  );
+}
 
 /**
  * Add an update handler
+ * @param {String} id the ID to trigger with
+ * @param {Function} callback the function to run at the specified ID
+ * @returns {Boolean} true when the listener was added successfully
  */
-export function addRouteChangeListener(id, callback) {
+export function addRouteChangeListener(id: string, callback: Function) {
+  if (handlers.has(id)) return false;
 
-	if(handlers[id])
-		return false;
+  handlers.set(id, callback);
 
-	handlers[id]= {
-		handler: callback
-	};
-
-	return true;
+  return true;
 }
-
-
 
 /**
  * Remove an update handler
+ * @param {String} id the ID to delete
  */
-export function removeRouteChangeListener(id) {
-	
-	delete handlers[id];
+export function removeRouteChangeListener(id: string) {
+  handlers.delete(id);
+}
+
+/**
+ * Exposes the handlers (i.e., for testing)
+ * @returns {Map<string, Function>} the handlers as a map object
+ */
+export function exposeRouteChangeListeners() {
+  return clone(handlers);
 }
