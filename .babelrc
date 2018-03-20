@@ -1,7 +1,21 @@
 {
   "env": {
     "test": {
-      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx", "lib/*.jsx"] }]]
+      "plugins": [["istanbul", { "exclude": ["**/*.spec.jsx", "lib/*.jsx"] }]],
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions", "safari >= 7"],
+              "node": "current"
+            }
+          }
+        ],
+        "@babel/preset-stage-0",
+        "@babel/preset-flow",
+        "@babel/preset-react"
+      ]
     }
   },
   "presets": [
