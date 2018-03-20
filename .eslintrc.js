@@ -8,6 +8,7 @@ module.exports = {
     'plugin:flowtype/recommended',
     'plugin:lodash/recommended',
     'plugin:react/recommended',
+    'plugin:import/recommended',
     'prettier',
   ],
   parser: 'babel-eslint',
@@ -20,7 +21,7 @@ module.exports = {
     ecmaVersion: 2016,
     sourceType: 'module',
   },
-  plugins: ['prettier', 'react', 'lodash', 'flowtype'],
+  plugins: ['prettier', 'import', 'react', 'lodash', 'flowtype'],
   rules: {
     'prettier/prettier': ['error'],
     'react/display-name': ['off'],
