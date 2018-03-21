@@ -1,13 +1,16 @@
 # PlasmaJS
 
 [![Build Status](https://travis-ci.org/phenax/plasmajs.svg?branch=master)](https://travis-ci.org/phenax/plasmajs)
-[![npm version](https://img.shields.io/npm/v/plasmajs.svg)](https://www.npmjs.com/package/plasmajs) [![license](https://img.shields.io/npm/l/plasmajs.svg)](https://github.com/phenax/plasmajs/blob/master/LICENSE) [![dependency status](https://david-dm.org/phenax/plasmajs/status.svg)](https://david-dm.org/phenax/plasmajs)
+[![npm version](https://img.shields.io/npm/v/plasmajs.svg)](https://www.npmjs.com/package/plasmajs)
+[![license](https://img.shields.io/npm/l/plasmajs.svg)](https://github.com/phenax/plasmajs/blob/master/LICENSE)
+[![dependency status](https://david-dm.org/phenax/plasmajs/status.svg)](https://david-dm.org/phenax/plasmajs)
+[![Discord](https://img.shields.io/discord/425972740688838656.svg)](https://discord.gg/b9Z4b6r)
 
 [![NPM](https://nodei.co/npm/plasmajs.png?downloadRank=true)](https://www.npmjs.com/package/plasmajs)
 
 An isomorphic NodeJS framework powered with React for building web apps.
 
-**[Use the starter-kit to get up and running with PlasmaJS](https://github.com/phenax/plasmajs-starter-kit)**
+**[Use the starter-kit to get up and running with PlasmaJS](https://github.com/phenax/plasmajs-starter-kit) [OUTDATED]**
 
 <br />
 
@@ -216,3 +219,7 @@ If `Homepage` is a react component class and `/` is the url.
   * statusCode (integer) - The status code for the response
   * caseInsensitive (boolean) - Set to true if you want the url to be case insensitive
   * errorHandler (boolean) - Set to true to define a 404 error handler
+
+
+## Want to help?
+PRs are welcome. You can also join us on [discord](https://discord.gg/b9Z4b6r) for discussions about plasmajs.
