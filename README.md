@@ -12,6 +12,8 @@ An isomorphic NodeJS framework powered with React for building web apps.
 
 **[Use the starter-kit to get up and running with PlasmaJS](https://github.com/phenax/plasmajs-starter-kit) [OUTDATED]**
 
+**[Join us on discord](https://discord.gg/b9Z4b6r)**
+
 <br />
 
 ## Features
