@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { checkUrlMatch, toUrlToken } from '../../lib/helper.jsx';
+import { checkUrlMatch, toUrlToken } from '../../lib/helper';
 
 describe('URL Matching', () => {
   it('should match two same urls as strings', () => {

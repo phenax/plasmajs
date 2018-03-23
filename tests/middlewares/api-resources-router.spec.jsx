@@ -4,9 +4,9 @@ import { expect } from 'chai';
 
 import constant from 'lodash/constant';
 
-import { renderComponent } from '../../lib/helper.jsx';
+import { renderComponent } from '../../lib/helper';
 
-import { Resource, Action } from '../../middlewares/APIResourcesRouter.jsx';
+import { Resource, Action } from '../../middlewares/APIResourcesRouter';
 
 import { mockCtx, createController } from '../../lib/testHelpers.jsx';
 

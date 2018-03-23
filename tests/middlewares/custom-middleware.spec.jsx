@@ -2,9 +2,9 @@ import React from 'react';
 
 import { expect } from 'chai';
 
-import { MiddleWare } from '../../MiddleWare.jsx';
+import { MiddleWare } from '../../MiddleWare';
 
-import { renderComponent } from '../../lib/helper.jsx';
+import { renderComponent } from '../../lib/helper';
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
 describe('Custom Middleware', () => {

@@ -13,7 +13,7 @@ import { expect } from 'chai';
 // import nock from 'nock';
 
 import { Router, Route } from '../../../router/server';
-import { NodeHistoryAPI } from '../../../router/history/NodeHistoryAPI';
+import { NodeHistoryAPI } from '../../../router/history/NodeHistoryAPI.jsx';
 
 const Wrapper = ({ children, name }) => (
   <div>

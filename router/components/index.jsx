@@ -1,82 +1,71 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import { triggerUpdate, routerConfig } from '../history/events.jsx';
 
-
 /**
  * Link component to be used as an anchor tag for front-end routing
  */
 export class Link extends React.Component {
+  _shouldTriggerUpdate() {
+    // IF the href is set, dont do shit
+    if (this.props.href) return false;
 
-	_shouldTriggerUpdate() {
+    // IF to is not set, dont do shit
+    if (!this.props.to) return false;
 
-		// IF the href is set, dont do shit
-		if(this.props.href)
-			return false;
+    return true;
+  }
 
-		// IF to is not set, dont do shit
-		if(!this.props.to)
-			return false;
+  _visitLink(e) {
+    if (!this._shouldTriggerUpdate()) return;
 
-		return true;
-	}
+    e.preventDefault();
 
-	_visitLink(e) {
+    // If its hash based url, change hash
+    if (routerConfig.type === 'hash') {
+      window.location.hash = `#${this.props.to}`;
+      return;
+    }
 
-		if(!this._shouldTriggerUpdate())
-			return;	
+    const defaultState = {
+      path: this.props.to,
+    };
 
-		e.preventDefault();
+    window.history.pushState(
+      this.props.state
+        ? { ...defaultState, ...this.props.state }
+        : { ...defaultState },
+      '',
+      this.props.to,
+    );
 
-		// If its hash based url, change hash
-		if(routerConfig.type === 'hash') {
-			window.location.hash= `#${this.props.to}`;
-			return;
-		}
+    triggerUpdate();
+  }
 
-		const defaultState= {
-			path: this.props.to
-		};
+  render() {
+    const properties = {};
 
-		window.history.pushState(
-			(this.props.state)? { ...defaultState, ...this.props.state }: { ...defaultState }, 
-			'', this.props.to
-		);
+    for (let key in this.props) {
+      if (key === 'to' || key === 'children') continue;
 
-		triggerUpdate();
-	}
+      properties[key] = this.props[key];
+    }
 
-	render() {
-
-		const properties= {};
-
-		for(let key in this.props) {
-
-			if(
-				key === 'to' ||
-				key === 'children'
-			)
-				continue;
-
-			properties[key]= this.props[key];
-		}
-
-		return (
-			<a
-				href={this.props.to || this.props.href} 
-				onClick={this._visitLink.bind(this)}
-				{...properties} >
-
-				{this.props.children}
-			</a>
-		);
-	}
+    return (
+      <a
+        href={this.props.to || this.props.href}
+        onClick={this._visitLink.bind(this)}
+        {...properties}
+      >
+        {this.props.children}
+      </a>
+    );
+  }
 }
 
-Link.propTypes= {
-	to: PropTypes.string,
-	href: PropTypes.string,
-	state: PropTypes.object
+Link.propTypes = {
+  to: PropTypes.string,
+  href: PropTypes.string,
+  state: PropTypes.object,
 };

@@ -11,9 +11,9 @@ import isString from 'lodash/isString';
 import map from 'lodash/map';
 import toLower from 'lodash/toLower';
 
-import { MiddleWare } from '../MiddleWare.jsx';
+import { MiddleWare } from '../MiddleWare';
 
-import { checkUrlMatch } from '../lib/helper.jsx';
+import { checkUrlMatch } from '../lib/helper';
 
 /**
  * Api resources structure

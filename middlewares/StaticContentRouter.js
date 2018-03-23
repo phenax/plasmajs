@@ -5,7 +5,7 @@ import path from 'path';
 
 import includes from 'lodash/includes';
 
-import { MiddleWare } from '../MiddleWare.jsx';
+import { MiddleWare } from '../MiddleWare';
 
 /**
  * Middleware to host static content on the server

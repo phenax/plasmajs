@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 
-const path= require('path');
+const path = require('path');
 // const defConf= {
 // 	presets: [ 'es2015', 'react' ],
 // 	plugins: [ 'transform-object-rest-spread' ]
@@ -11,11 +11,11 @@ require('@babel/register')({
 
 	ignore: (name) => {
 
-		if(name.includes('node_modules/plasmajs')) {
+		if (name.includes('node_modules/plasmajs')) {
 			return false;
 		}
 
-		if(name.includes('node_modules')) {
+		if (name.includes('node_modules')) {
 			return true;
 		}
 
@@ -27,7 +27,7 @@ require('@babel/register')({
 // 
 // TODO: Add more command-line arguments for more configurations
 // 
-if(process.argv.length < 3) {
+if (process.argv.length < 3) {
 	console.log('Usage: plasmajs ./your-server.js');
 	process.exit(0);
 }
@@ -38,13 +38,13 @@ let App;
 
 try {
 
-	App= require(path.resolve(fileName)).default;
-	
-	if(!App) {
+	App = require(path.resolve(fileName)).default;
+
+	if (!App) {
 		throw new Error("You need to export a React component class");
 	}
 
-} catch(e) {
+} catch (e) {
 
 	console.error("ERROR:", e);
 
@@ -53,33 +53,33 @@ try {
 
 
 // NodeServer class
-const NodeServer= App.NodeServer || require('./app.jsx').NodeServer;
+const NodeServer = App.NodeServer || require('./app').NodeServer;
 
 // Creates and starts a new server instance
 function startNewServer() {
 
-	const plasmaJSServer= new NodeServer(App);
+	const plasmaJSServer = new NodeServer(App);
 
 	return plasmaJSServer.createServer().start();
 }
 
 
 // If the user has enabled cluster in the app
-if(App.cluster && typeof App.cluster === 'object') {
+if (App.cluster && typeof App.cluster === 'object') {
 
-	const cluster= require('cluster');
+	const cluster = require('cluster');
 
-	if(cluster.isMaster) {
-		
-		for(let i= 0; i< App.cluster.count; i++) {
+	if (cluster.isMaster) {
+
+		for (let i = 0; i < App.cluster.count; i++) {
 			cluster.fork();
 		}
 
-		if(typeof App.cluster.master === 'function') {
+		if (typeof App.cluster.master === 'function') {
 			App.cluster.master();
 		}
 
-		cluster.on('exit', ()=> {
+		cluster.on('exit', () => {
 			cluster.fork();
 		});
 
@@ -87,13 +87,13 @@ if(App.cluster && typeof App.cluster === 'object') {
 
 		startNewServer();
 
-		if(typeof App.cluster.notMaster === 'function') {
+		if (typeof App.cluster.notMaster === 'function') {
 			App.cluster.notMaster();
 		}
 	}
 
 } else {
-	startNewServer();	
+	startNewServer();
 }
 
 

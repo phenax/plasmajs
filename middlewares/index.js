@@ -1,4 +1,4 @@
-export * from './Logger.jsx';
+export * from './Logger';
 export * from './APIRouter.jsx';
 export * from './ServiceWorkers.jsx';
 export * from './BlankMiddleWare.jsx';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import constant from 'lodash/constant';
 import noop from 'lodash/noop';
 
-import { Router, Route } from '../router/server.jsx';
+import { Router, Route } from '../router/server';
 import { MockHistoryAPI } from '../router/history/MockHistoryAPI.jsx';
 import { action } from '../middlewares/APIResourcesRouter';
 

@@ -2,9 +2,9 @@ import React from 'react';
 import path from 'path';
 import { expect } from 'chai';
 
-import { StaticContentRouter } from '../../middlewares/StaticContentRouter.jsx';
+import { StaticContentRouter } from '../../middlewares/StaticContentRouter';
 
-import { renderComponent } from '../../lib/helper.jsx';
+import { renderComponent } from '../../lib/helper';
 import { mockCtx } from '../../lib/testHelpers.jsx';
 
 describe('StaticContentRouter Middleware', () => {

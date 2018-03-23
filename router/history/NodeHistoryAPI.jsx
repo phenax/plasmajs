@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import _HnRouteHistoryAPI from './_HnRouteHistoryAPI.jsx';
 
-import { routerConfig } from './events.jsx';
+import { routerConfig } from './events';
 
 /**
  * Helper class to be passed into the HnRouter component for

@@ -6,7 +6,7 @@ import filter from 'lodash/filter';
 import toLower from 'lodash/toLower';
 // import {} from 'lodash'; // for searching for functions in VSCode
 
-import { checkUrlMatch } from '../../lib/helper.jsx';
+import { checkUrlMatch } from '../../lib/helper';
 /**
  * Super class for all the history api classes
  */

@@ -2,8 +2,8 @@ import React from 'react';
 
 import { expect } from 'chai';
 
-import { renderComponent } from '../../lib/helper.jsx';
-import { APIRoute } from '../../middlewares/APIRouter.jsx';
+import { renderComponent } from '../../lib/helper';
+import { APIRoute } from '../../middlewares/APIRouter';
 
 import { mockCtx } from '../../lib/testHelpers.jsx';
 

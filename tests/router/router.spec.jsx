@@ -7,10 +7,10 @@ import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import noop from 'lodash/noop';
 
-import { Route } from '../../router/server.jsx';
+import { Route } from '../../router/server';
 import { MockHistoryAPI } from '../../router/history/MockHistoryAPI.jsx';
 
-import { renderComponent } from '../../lib/helper.jsx';
+import { renderComponent } from '../../lib/helper';
 import * as route from '../../lib/testHelpers.jsx';
 
 describe('Router', () => {

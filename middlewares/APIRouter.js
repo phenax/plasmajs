@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { MiddleWare } from '../MiddleWare.jsx';
+import { MiddleWare } from '../MiddleWare';
 
-import { checkUrlMatch } from '../lib/helper.jsx';
+import { checkUrlMatch } from '../lib/helper';
 
 export class APIRoute extends MiddleWare {
   onRequest() {
