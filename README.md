@@ -108,8 +108,9 @@ And in App's render method...
 
 It logs information about the request made to the server out to the console.
 
+````javascript
 import {Logger} from 'plasmajs' // and add it in the server but after the router declaration.
-
+````
 ```html
 <Server>
   // ...
@@ -119,7 +120,7 @@ import {Logger} from 'plasmajs' // and add it in the server but after the router
 ```
 
 * Props
-  * color (boolean) - Adds color to the logs if true
+  * `color` (boolean) - Adds color to the logs if true
 
 <br />
 
@@ -127,8 +128,9 @@ import {Logger} from 'plasmajs' // and add it in the server but after the router
 
 Allows you to host a static content directory for public files
 
+````javascript
 import {StaticContentRouter} from 'plasmajs'
-
+````
 ```html
 <Server>
   <StaticContentRouter {...this.props} dir='public' hasPrefix={true} />
@@ -138,9 +140,9 @@ import {StaticContentRouter} from 'plasmajs'
 ```
 
 * Props
-  * dir (string) - The name of the static content folder to host
-  * hasPrefix (boolean) - If set to false, will route it as http://example.com/file instead of http://example.com/public/file
-  * compress (boolean) - If true, will enable gzip compression on all static content if the client supports it
+  * `dir` (string) - The name of the static content folder to host
+  * `hasPrefix` (boolean) - If set to false, will route it as http://example.com/file instead of http://example.com/public/file
+  * `compress` (boolean) - If true, will enable gzip compression on all static content if the client supports it
 
 <br />
 
@@ -148,9 +150,9 @@ import {StaticContentRouter} from 'plasmajs'
 
 Allows you to declare isolated routes for requests to api hooks
 
-import {APIRoute} from 'plasmajs'
-
 ```javascript
+  import {APIRoute} from 'plasmajs'
+  
   //...
   // API request handler for api routes
   _apiRequestHandler() {
@@ -175,9 +177,9 @@ import {APIRoute} from 'plasmajs'
 ```
 
 * Props
-  * method (string) - The http request method
-  * path (string or regex) - The path to match
-  * controller (function) - The request handler
+  * `method` (string) - The http request method
+  * `path` (string or regex) - The path to match
+  * `controller` (function) - The request handler
 
 <br />
 
@@ -202,8 +204,8 @@ There are 3 types of routing available - Backend routing(`new NodeHistoryAPI(req
 ```
 
 * Props
-  * history (object) - It's the history api instance you pass in depending on the kind of routing you require.
-  * wrapper (React component class) - It is a wrapper for the routed contents
+  * `history` (object) - It's the history api instance you pass in depending on the kind of routing you require.
+  * `wrapper` (React component class) - It is a wrapper for the routed contents
 
 <br />
 
@@ -216,11 +218,11 @@ If `Homepage` is a react component class and `/` is the url.
 ```
 
 * Props
-  * path (string or regex) - The url to route the request to
-  * component (React component class) - The component to be rendered when the route is triggered
-  * statusCode (integer) - The status code for the response
-  * caseInsensitive (boolean) - Set to true if you want the url to be case insensitive
-  * errorHandler (boolean) - Set to true to define a 404 error handler
+  * `path` (string or regex) - The url to route the request to
+  * `component` (React component class) - The component to be rendered when the route is triggered
+  * `statusCode` (integer) - The status code for the response
+  * `caseInsensitive` (boolean) - Set to true if you want the url to be case insensitive
+  * `errorHandler` (boolean) - Set to true to define a 404 error handler
 
 
 ## Want to help?
