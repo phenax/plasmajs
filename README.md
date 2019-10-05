@@ -21,7 +21,7 @@ An isomorphic NodeJS framework powered with React for building web apps.
 * Declarative syntax
 * Isomorphic routing
 * Isolated routing for API endpoints
-* Maintainable middlewares
+* Middlewares that are maintanable
 * ES6 syntax with babel
 
 <br />
@@ -76,7 +76,7 @@ export default class App extends React.Component {
 
 ### Middlewares
 
-#### Writing custom middlewares
+#### Writing custom Middlewares
 
 In MyMiddleWare.jsx...
 
@@ -104,7 +104,7 @@ And in App's render method...
 
 <br />
 
-#### Logger middleware
+#### Logger Middleware
 
 It logs information about the request made to the server out to the console.
 
@@ -124,7 +124,7 @@ import {Logger} from 'plasmajs' // and add it in the server but after the router
 
 <br />
 
-#### StaticContentRouter middleware
+#### StaticContentRouter Middleware
 
 Allows you to host a static content directory for public files
 
@@ -146,7 +146,7 @@ import {StaticContentRouter} from 'plasmajs'
 
 <br />
 
-#### APIRoute middleware
+#### APIRoute Middleware
 
 Allows you to declare isolated routes for requests to api hooks
 
