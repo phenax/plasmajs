@@ -16,6 +16,18 @@ An isomorphic NodeJS framework powered with React for building web apps.
 
 <br />
 
+[Getting Started](https://github.com/ManuelPortero/plasmajs/blob/ManuelPortero-patch-1/docs/gettingStarted.md)
+
+<br />
+
+[Middlewares](https://github.com/ManuelPortero/plasmajs/blob/ManuelPortero-patch-1/docs/middlewares.md)
+
+<br />
+
+[Routes](https://github.com/ManuelPortero/plasmajs/blob/ManuelPortero-patch-1/docs/routes.md)
+
+<br /> 
+
 ## Features
 
 * Declarative syntax
